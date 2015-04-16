@@ -8,5 +8,8 @@ before_install:
  - chmod a+x ./travis/install-prerequisites.sh
 install:
  - ./travis/install-prerequisites.sh
+
+before_script:
+ - chmod a+x ./travis/build.sh
 script:
  - ./travis/build.sh
