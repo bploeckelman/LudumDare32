@@ -2,6 +2,7 @@ package lando.systems.ld32;
 
 import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.*;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -28,8 +29,9 @@ public class GameInstance extends ApplicationAdapter {
 	TextureRegion      sceneRegion;
 	OrthographicCamera sceneCamera;
 
-	Vector2 bouncerPos = new Vector2();
-	Vector2 bouncerVel = new Vector2(MathUtils.random() * 2f - 1.0f, MathUtils.random() / 2f - 0.25f);
+	Vector2      bouncerPos = new Vector2();
+	Vector2      bouncerVel = new Vector2(MathUtils.random() * 2f - 1.0f, MathUtils.random() / 2f - 0.25f);
+	MutableFloat floor_y    = new MutableFloat(109f);
 
 	@Override
 	public void create() {
@@ -48,8 +50,11 @@ public class GameInstance extends ApplicationAdapter {
 		sceneCamera.setToOrtho(false, sceneFBO.getWidth(), sceneFBO.getHeight());
 		sceneCamera.update();
 
-		bouncerPos.set(sceneCamera.viewportWidth  / 2f - img.getWidth()  / 2f,
-		               (sceneCamera.viewportHeight - 109) / 2f - img.getHeight() / 2f + 109f);
+		final float halfViewWidth  =  sceneCamera.viewportWidth / 2f;
+		final float halfViewHeight = (sceneCamera.viewportHeight - floor_y.floatValue()) / 2f;
+		final float halfImgWidth   = img.getWidth()  / 2f;
+		final float halfImgHeight  = img.getHeight() / 2f;
+		bouncerPos.set(halfViewWidth - halfImgWidth, halfViewHeight - halfImgHeight + floor_y.floatValue());
 
 		changeBackgroundColor();
 	}
@@ -80,11 +85,11 @@ public class GameInstance extends ApplicationAdapter {
 			changeBackgroundColor();
 		}
 
-		final float floor_y = 109f;
-		if (bouncerPos.y < floor_y) {
-			bouncerPos.y = floor_y;
+		if (bouncerPos.y < floor_y.floatValue()) {
+			bouncerPos.y = floor_y.floatValue();
 			bouncerVel.y = -1f * Math.signum(bouncerVel.y) * (MathUtils.random() / 2f + 0.5f);
 			changeBackgroundColor();
+			bounceFooter();
 		}
 		if (bouncerPos.y > sceneCamera.viewportHeight - img.getHeight()) {
 			bouncerPos.y = sceneCamera.viewportHeight - img.getHeight();
@@ -103,7 +108,7 @@ public class GameInstance extends ApplicationAdapter {
 			batch.setShader(null);
 			batch.begin();
 			batch.draw(img, bouncerPos.x, bouncerPos.y);
-			batch.draw(ldLogo, 0, 0);
+			batch.draw(ldLogo, 0, floor_y.floatValue() - 109f);
 			batch.end();
 		}
 		sceneFBO.end();
@@ -132,5 +137,12 @@ public class GameInstance extends ApplicationAdapter {
 		     .start(tweens);
 	}
 
+	private void bounceFooter() {
+		Tween.to(floor_y, -1, 0.33f)
+		     .target(95f)
+		     .ease(Back.OUT)
+		     .repeatYoyo(1, 0f)
+		     .start(tweens);
+	}
 
 }
