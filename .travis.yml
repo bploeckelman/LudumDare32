@@ -1,6 +1,11 @@
 language: java
 jdk: oraclejdk7
 
+notifications:
+  email: false
+
+before_script:
+ - chmod a+x ./travis/install-prerequisites.sh
 install:
  - ./travis/install-prerequisites.sh
 script:
