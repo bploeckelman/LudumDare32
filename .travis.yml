@@ -4,7 +4,7 @@ jdk: oraclejdk7
 notifications:
   email: false
 
-before_script:
+before_install:
  - chmod a+x ./travis/install-prerequisites.sh
 install:
  - ./travis/install-prerequisites.sh
