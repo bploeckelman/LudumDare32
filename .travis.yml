@@ -4,13 +4,8 @@ jdk: oraclejdk7
 notifications:
   email: false
 
-before_install:
- - chmod a+x ./travis/install-prerequisites.sh
 install:
  - ./travis/install-prerequisites.sh
 
-before_script:
- - chmod a+x ./travis/build.sh
- - chmod a+x ./gradlew
 script:
  - ./travis/build.sh
