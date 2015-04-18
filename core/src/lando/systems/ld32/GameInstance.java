@@ -34,7 +34,6 @@ public class GameInstance extends Game {
     }
 
     public void exit() {
-        Assets.dispose();
         Gdx.app.exit();
     }
 
