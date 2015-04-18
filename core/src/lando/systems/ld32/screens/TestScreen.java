@@ -7,6 +7,7 @@ import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +20,7 @@ import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.tweens.ColorAccessor;
 
-public class TestScreen implements Screen {
+public class TestScreen extends ScreenAdapter {
 
     GameInstance game;
 
@@ -103,30 +104,6 @@ public class TestScreen implements Screen {
             pulseText(0.4f);
         }
     }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-        // TODO: disable any input handlers here
-    }
-
-    @Override
-    public void resume() {
-        // TODO: restore any input handlers here
-    }
-
-    @Override
-    public void dispose() {}
-
-    @Override
-    public void show() {}
-
-    @Override
-    public void hide() {}
 
     private void renderScene(SpriteBatch batch) {
         sceneFBO.begin();
