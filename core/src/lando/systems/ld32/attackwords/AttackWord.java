@@ -13,6 +13,9 @@ public class AttackWord {
 
     static final float bubble_margin    = 10f;
     static final float default_velocity = -120f;
+    static final float flash_duration   = 0.15f;
+    static final float move_delay_time  = 4.5f * flash_duration;
+
 
     final String     word;
     final String[]   letters;
@@ -20,6 +23,8 @@ public class AttackWord {
 
     String typed;
     float moveDelay;
+    float flashTimer;
+    boolean visible;
 
     public Vector2    velocity;
     public BitmapFont font;
@@ -42,7 +47,7 @@ public class AttackWord {
         typed = "";
         bounds.x = x;
         bounds.y = y;
-        moveDelay = 0.5f;
+        moveDelay = move_delay_time;
         return this;
     }
 
@@ -68,6 +73,13 @@ public class AttackWord {
         moveDelay -= delta;
         if (moveDelay <= 0f) {
             moveDelay = 0f;
+            visible = true;
+        } else {
+            flashTimer -= delta;
+            if (flashTimer <= 0f) {
+                flashTimer = flash_duration;
+                visible = !visible;
+            }
         }
 
         if (moveDelay == 0f) {
@@ -77,6 +89,8 @@ public class AttackWord {
     }
 
     public void render(SpriteBatch batch) {
+        if (!visible) return;
+
         Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
 
         float textX = bounds.x + bounds.width  / 2f - textBounds.width  / 2f;
