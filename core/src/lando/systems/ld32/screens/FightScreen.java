@@ -102,6 +102,8 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
+        killPhrase.update(delta);
+
         staggerTimer -= delta;
         if (staggerTimer <= 0f) {
             staggerTimer = 0f;
@@ -142,7 +144,7 @@ public class FightScreen extends ScreenAdapter {
                     attackWords.removeValue(word, true);
                 } else {
                     word.velocity.set(0, 0);
-                    Tween.to(word.bounds, RectangleAccessor.XYWH, 0.8f)
+                    Tween.to(word.bounds, RectangleAccessor.XYWH, AttackWord.flyoff_duration)
                          .target(targetLetter.x, targetLetter.y, 0, 0)
                          .ease(Quint.OUT)
                          .setCallback(new TweenCallback() {
@@ -177,7 +179,7 @@ public class FightScreen extends ScreenAdapter {
                     attackWords.removeValue(word, true);
                 } else {
                     word.velocity.set(0, 0);
-                    Tween.to(word.bounds, RectangleAccessor.XYWH, 0.8f)
+                    Tween.to(word.bounds, RectangleAccessor.XYWH, AttackWord.flyoff_duration)
                          .target(targetLetter.x, targetLetter.y, 0, 0)
                          .ease(Quint.OUT)
                          .setCallback(new TweenCallback() {

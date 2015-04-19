@@ -1,8 +1,11 @@
 package lando.systems.ld32.killphrase;
 
+import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.equations.Cubic;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -11,9 +14,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.attackwords.AttackWord;
+import lando.systems.ld32.effects.Explode;
 
 public class KillPhrase {
     private final String space = " ";
@@ -30,6 +36,7 @@ public class KillPhrase {
     );
 
     public boolean[] enabled;
+    public boolean[] visible;
     public TextBounds[] charBounds;
     public Vector2[] charOrigins;
     public Vector2[] boxOrigins;
@@ -42,16 +49,20 @@ public class KillPhrase {
     private String[] phrase;
     private BitmapFont font;
 
+    Array<Explode> explodes;
+
     public KillPhrase(String phrase, BitmapFont font) {
         this.font = font;
         this.typed = "";
         this.fullPhrase = phrase.toUpperCase();
         this.phrase = new String[phrase.length()];
         enabled = new boolean[this.phrase.length];
+        visible = new boolean[this.phrase.length];
         charBounds = new TextBounds[this.phrase.length];
         charOrigins = new Vector2[this.phrase.length];
         boxOrigins = new Vector2[this.phrase.length];
         yOffsets = new MutableFloat[this.phrase.length];
+        explodes = new Array<Explode>();
 
         float width = 0;
         for(int i=0; i<this.phrase.length; i++) {
@@ -68,6 +79,7 @@ public class KillPhrase {
         float xOffset = bounds.x;
         for(int i=0; i<this.phrase.length; i++) {
             enabled[i] = false;
+            visible[i] = false;
             TextBounds charBounds = font.getBounds(this.phrase[i]);
 
             if(this.phrase[i].equals(space)) {
@@ -92,6 +104,7 @@ public class KillPhrase {
                 if(phrase[i].equals(space)) {
                     continue;
                 }
+                tweenExplode(i);
                 return temp.set(boxOrigins[i].x + boxSize / 2f, boxOrigins[i].y + boxSize / 2f).cpy();
             }
         }
@@ -102,6 +115,7 @@ public class KillPhrase {
         for(int i=phrase.length-1; i>=0; i--) {
             if(enabled[i]) {
                 enabled[i] = false;
+                visible[i] = false;
                 if(phrase[i].equals(space)) {
                     continue;
                 }
@@ -132,6 +146,20 @@ public class KillPhrase {
         typed = "";
     }
 
+    public void update(float delta) {
+        for (int i = explodes.size - 1; i >= 0; --i) {
+            final Explode explode = explodes.get(i);
+            explode.update(delta);
+            if (explode.alive) {
+                explode.position.y = boxOrigins[boxOrigins.length-1].y +
+                    (boxSize/2) + yOffsets[yOffsets.length-1].floatValue();
+            } else {
+                Explode.explodePool.free(explode);
+                explodes.removeIndex(i);
+            }
+        }
+    }
+
     public void render(SpriteBatch batch) {
         font.setColor(Color.WHITE);
         for(int i=0; i<phrase.length; i++) {
@@ -145,7 +173,7 @@ public class KillPhrase {
                 boxOrigins[i].y + yOffsets[i].floatValue(),
                 boxSize, boxSize);
 
-            if(enabled[i]) {
+            if(visible[i]) {
                 font.draw(batch, phrase[i], charOrigins[i].x, charOrigins[i].y + yOffsets[i].floatValue());
             }
         }
@@ -156,6 +184,10 @@ public class KillPhrase {
             font.draw(batch, "" + typed.charAt(i), charOrigins[i].x, charOrigins[i].y + yOffsets[i].floatValue());
         }
         font.setColor(Color.WHITE);
+
+        for (Explode explode : explodes) {
+            explode.render(batch);
+        }
     }
 
     public void keyTyped(int keycode) {
@@ -195,6 +227,31 @@ public class KillPhrase {
             }
         }
         timeline.start(GameInstance.tweens);
+    }
+
+    private void doExplode(Vector2 origin, float scale) {
+        float x = origin.x + boxSize / 2f;
+        float y = origin.y + boxSize / 2f;
+        Explode explode = Explode.explodePool.obtain();
+        explode.init(x, y);
+        explodes.add(explode);
+    }
+    public void tweenExplode(final int letter) {
+        Tween.to(new MutableFloat(0f), -1, AttackWord.flyoff_duration - .2f)
+            .setCallback(new TweenCallback() {
+                @Override
+                public void onEvent(int type, BaseTween<?> source) {
+                    doExplode(boxOrigins[letter], 0f);
+                    visible[letter] = true;
+                    if (letter != phrase.length - 1) {
+                        Tween.to(yOffsets[letter], -1, .2f)
+                            .target(boxSize / 2)
+                            .ease(Cubic.OUT)
+                            .repeatYoyo(1, 0f)
+                            .start(GameInstance.tweens);
+                    }
+                }
+            }).start(GameInstance.tweens);
     }
 
 }

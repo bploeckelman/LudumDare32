@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Effect {
     float         scale;
     float         stateTime;
-    Vector2       position;
+    public Vector2       position;
     Animation     animation;
     public TextureRegion keyFrame;
     // TODO: add color field?

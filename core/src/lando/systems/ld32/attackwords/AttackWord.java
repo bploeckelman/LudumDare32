@@ -15,6 +15,7 @@ public class AttackWord {
     static final float default_velocity = -120f;
     static final float flash_duration   = 0.15f;
     static final float move_delay_time  = 4.5f * flash_duration;
+    public static final float flyoff_duration = .8f;
 
 
     final String     word;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import lando.systems.ld32.effects.Explode;
 import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.effects.StunStars;
 
@@ -26,6 +27,7 @@ public class Assets {
 
     public static Animation puffAnimation;
     public static Animation stunStarsAnimation;
+    public static Animation explodeAnimation;
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
@@ -60,6 +62,13 @@ public class Assets {
             stunStarsRegions[0][1],
             stunStarsRegions[0][2]);
         stunStarsAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        explodeAnimation = new Animation(
+            Explode.explode_time,
+            effectsRegions[0][0],
+            effectsRegions[0][1],
+            effectsRegions[10][0],
+            effectsRegions[10][1]);
+
 
 
         // TODO: Temporary animations
