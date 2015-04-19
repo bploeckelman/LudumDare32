@@ -29,6 +29,7 @@ import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
 import lando.systems.ld32.input.KeyboardInputAdapter;
 import lando.systems.ld32.killphrase.KillPhrase;
+import lando.systems.ld32.tweens.ColorAccessor;
 import lando.systems.ld32.tweens.RectangleAccessor;
 
 public class FightScreen extends ScreenAdapter {
@@ -59,7 +60,7 @@ public class FightScreen extends ScreenAdapter {
 
         font = new BitmapFont();
         font.setMarkupEnabled(true);
-        backgroundColor = Color.BLACK;
+        backgroundColor = new Color(1, 1, 1, 1);
         sceneFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Constants.win_width, Constants.win_height, false);
         sceneRegion = new TextureRegion(sceneFBO.getColorBufferTexture());
         sceneRegion.flip(false, true);
@@ -104,6 +105,9 @@ public class FightScreen extends ScreenAdapter {
         staggerTimer -= delta;
         if (staggerTimer <= 0f) {
             staggerTimer = 0f;
+            if(keyboardInputAdapter.staggerWindow) {
+                tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate);
+            }
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
             stunStars.alive = false;
@@ -153,9 +157,10 @@ public class FightScreen extends ScreenAdapter {
                     attackWords.clear();
                     stunStars.init(
                         enemy.position.x +
-                            (Assets.stunStarsRegions[0][0].getRegionWidth()/2) * StunStars.stunstars_scale,
+                            (Assets.stunStarsRegions[0][0].getRegionWidth() / 2) * StunStars.stunstars_scale,
                         enemy.position.y + enemy.keyFrame.getRegionHeight() * enemy.scale);
                     enemy.paused = true;
+                    tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
                 }
             }
             else if (word.bounds.x < player.position.x && !word.disabled) {
@@ -186,6 +191,7 @@ public class FightScreen extends ScreenAdapter {
             enemy = EnemyFactory.getBoss(font, 1);
             killPhrase = new KillPhrase(enemy.killPhrase, font);
             keyboardInputAdapter.killPhrase = killPhrase;
+            tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
         }
 
         if(stunStars.alive) {
@@ -208,13 +214,13 @@ public class FightScreen extends ScreenAdapter {
             /*
              * Render Stuff!
              */
+            batch.setColor(backgroundColor);
             batch.draw(Assets.background1, 0, 0, sceneCamera.viewportWidth, sceneCamera.viewportHeight);
 
             enemy.render(batch);
             for(int i=0; i<attackWords.size; i++) {
                 attackWords.get(i).render(batch);
             }
-            killPhrase.render(batch);
             if(stunStars.alive) {
                 stunStars.render(batch);
             }
@@ -224,6 +230,10 @@ public class FightScreen extends ScreenAdapter {
             for (Puff puff : puffs) {
                 puff.render(batch);
             }
+
+            batch.setColor(Color.WHITE);
+
+            killPhrase.render(batch);
 
             batch.end();
         }
@@ -244,6 +254,13 @@ public class FightScreen extends ScreenAdapter {
         Puff puff = Puff.puffPool.obtain();
         puff.init(x, y);
         puffs.add(puff);
+    }
+
+    private void tweenBgColor(float r, float g, float b, float rate) {
+        Tween.to(backgroundColor, ColorAccessor.RGB, rate)
+            .target(r, g, b)
+            .ease(Quint.INOUT)
+            .start(GameInstance.tweens);
     }
 
 }

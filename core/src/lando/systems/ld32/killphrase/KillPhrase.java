@@ -13,6 +13,8 @@ import lando.systems.ld32.Constants;
 public class KillPhrase {
     private final String space = " ";
 
+    public static float dropRate = 1f;
+
     public static int boxSize = 32;
     public static int boxSpacing = 4;
     public static int spaceSize = 16;
