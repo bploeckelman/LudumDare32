@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import lando.systems.ld32.screens.FightScreen;
 import lando.systems.ld32.screens.TestScreen;
 import lando.systems.ld32.tweens.ColorAccessor;
 import lando.systems.ld32.tweens.Vector2Accessor;
@@ -30,7 +31,8 @@ public class GameInstance extends Game {
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 
         screens.put(Constants.test_screen, new TestScreen(this));
-        setScreen(screens.get(Constants.test_screen));
+        screens.put(Constants.fight_screen, new FightScreen(this));
+        setScreen(screens.get(Constants.fight_screen));
     }
 
     public void exit() {
