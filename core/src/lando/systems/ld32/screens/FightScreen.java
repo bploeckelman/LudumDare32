@@ -11,11 +11,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.attackwords.AttackWord;
+import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.entities.Enemy;
 import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
@@ -39,6 +41,7 @@ public class FightScreen extends ScreenAdapter {
     KillPhrase        killPhrase;
 
     Player player;
+    Array<Puff> puffs;
 
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
@@ -64,6 +67,8 @@ public class FightScreen extends ScreenAdapter {
 
         keyboardInputAdapter = new KeyboardInputAdapter(attackWords, killPhrase);
         Gdx.input.setInputProcessor(keyboardInputAdapter);
+
+        puffs = new Array<Puff>();
     }
 
     @Override
@@ -75,6 +80,15 @@ public class FightScreen extends ScreenAdapter {
 
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
+
+        for (int i = puffs.size - 1; i >= 0; --i) {
+            final Puff puff = puffs.get(i);
+            puff.update(delta);
+            if (!puff.alive) {
+                Puff.puffPool.free(puff);
+                puffs.removeIndex(i);
+            }
+        }
 
         staggerTimer -= delta;
         if (staggerTimer <= 0f) {
@@ -98,15 +112,20 @@ public class FightScreen extends ScreenAdapter {
 
         if (attackWords.size > 0) {
             if (attackWords.first().isComplete()) {
+                doPuff(attackWords.first().bounds, 3f);
+
                 attackWords.removeIndex(0);
                 killPhrase.enableLetter();
                 if (killPhrase.isComplete()) {
                     staggerTimer = stagger_time;
                     keyboardInputAdapter.staggerWindow = true;
+                    // TODO: puff all attack words prior to clearing
                     attackWords.clear();
                 }
             }
             else if (attackWords.first().bounds.x < player.position.x) {
+                doPuff(attackWords.first().bounds, 2f);
+
                 attackWords.removeIndex(0);
                 killPhrase.disableLetter();
             }
@@ -145,6 +164,10 @@ public class FightScreen extends ScreenAdapter {
 
             player.render(batch);
 
+            for (Puff puff : puffs) {
+                puff.render(batch);
+            }
+
             batch.end();
         }
         sceneFBO.end();
@@ -157,4 +180,13 @@ public class FightScreen extends ScreenAdapter {
         batch.draw(sceneRegion, 0, 0);
         batch.end();
     }
+
+    private void doPuff(Rectangle bounds, float scale) {
+        float x = bounds.x + bounds.width / 2f;
+        float y = bounds.y + bounds.height / 2f;
+        Puff puff = Puff.puffPool.obtain();
+        puff.init(x, y);
+        puffs.add(puff);
+    }
+
 }
