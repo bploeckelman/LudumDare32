@@ -86,4 +86,5 @@ public class NarrativePhrase {
         updateTime += delta;
     }
 
+    // todo: move drawString stuff into update
 }

@@ -1,17 +1,15 @@
 package lando.systems.ld32.narrative;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import lando.systems.ld32.Constants;
 
 import java.util.ArrayList;
 
 public class NarrativeManager {
 
-    private final static int PARAGRAPH_PAD_Y = 10;
+    public final static int LINE_HEIGHT = 18;
     private final static int PADDING = 10;
+    private final static int PARAGRAPH_PAD_Y = 10;
 
     private final int x;
     private final int y;
@@ -20,7 +18,6 @@ public class NarrativeManager {
     private float updateTime = 0;
 
     private ArrayList<NarrativeParagraph> paragraphs = new ArrayList<NarrativeParagraph>();
-    private BitmapFont font;
 
     /**
      * When updating paragraphs, which paragraph should we begin with?  This index will be updated as paragraphs are
@@ -31,20 +28,16 @@ public class NarrativeManager {
     // -----------------------------------------------------------------------------------------------------------------
 
 
-    public NarrativeManager(BitmapFont font, int x, int y, int width, int height) {
-        this.font = font;
+    public NarrativeManager(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
 
-        // todo: remove debug
-        font.setColor(new Color(1, 1, 1, 1));
-
-        // TEST
-        addParagraph(new NarrativePhrase(font, "This is the first line.", 2));
-        addPhraseToCurrentParagraph(new NarrativePhrase(font, "Additional words are now added.", 40));
-        addPhraseToCurrentParagraph(new NarrativePhrase(font, "SLOW", 2));
+//        // TEST
+//        // todo: remove debug
+//        font.setColor(new Color(1, 1, 1, 1));
+//        addPhraseToCurrentParagraph(new NarrativePhrase(font, "This is sentence number 3", 20));
 
     }
 
@@ -58,7 +51,7 @@ public class NarrativeManager {
             paragraphs.get(i).showAll();
         }
 
-        paragraphs.add(new NarrativeParagraph(phrase, width - PADDING));
+        paragraphs.add(new NarrativeParagraph(phrase, width - (PADDING * 2)));
     }
 
     public void addPhraseToCurrentParagraph(NarrativePhrase phrase) {
@@ -74,27 +67,22 @@ public class NarrativeManager {
         NarrativeParagraph paragraph;
         float currentX = x + PADDING;
         float currentY = y + PADDING;
-        for (int i = paragraphs.size() - 1; i >= 0; i--) {
+        for (int i = paragraphs.size() - 1; i >= paragraphUpdateStartingIndex; i--) {
             paragraph = paragraphs.get(i);
             paragraphBounds = paragraph.render(batch, currentX, currentY);
             currentY += paragraphBounds.height + PARAGRAPH_PAD_Y;
-            if (currentY > Constants.win_height) {
+            if ((i - 1) > paragraphUpdateStartingIndex && currentY > y + height) {
                 paragraphUpdateStartingIndex = Math.max(i - 1, 0);
+//                Gdx.app.log("NarrativeManager.render", "updated starting index to " + paragraphUpdateStartingIndex);
                 break;
             }
         }
     }
 
-    boolean debugFlag = false;
-
     public void update(float delta) {
         updateTime += delta;
         for (int i = paragraphUpdateStartingIndex; i < paragraphs.size(); i++) {
             paragraphs.get(i).update(delta);
-        }
-        if (updateTime > 5 && !debugFlag) {
-            debugFlag = true;
-            addParagraph(new NarrativePhrase(font, "Second line, coming at you!", 15));
         }
     }
 

@@ -1,16 +1,16 @@
 package lando.systems.ld32.narrative;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import lando.systems.ld32.Utils;
 
 import java.util.ArrayList;
 
 // todo word wrap
 
 public class NarrativeParagraph {
-
-    private ArrayList<NarrativePhrase> phrases = new ArrayList<NarrativePhrase>();
 
     private ArrayList<ArrayList<NarrativePhrase>> phrasesByLine = new ArrayList<ArrayList<NarrativePhrase>>();
 
@@ -23,6 +23,7 @@ public class NarrativeParagraph {
     public NarrativeParagraph(NarrativePhrase phrase, int width) {
 
         this.width = width;
+        phrasesByLine.add(new ArrayList<NarrativePhrase>());
         addPhrase(phrase);
 
     }
@@ -31,40 +32,79 @@ public class NarrativeParagraph {
     // -----------------------------------------------------------------------------------------------------------------
 
     public void addPhrase(NarrativePhrase phrase) {
-        phrases.add(phrase);
         ArrayList<NarrativePhrase> currentLine = phrasesByLine.get(phrasesByLine.size() - 1);
         int currentLinePhraseCount = currentLine.size();
-        float lineWidth = currentLinePhraseCount == 0 ? 0 : getWidthOfLine(currentLine);
+        float currentLineWidth = currentLinePhraseCount == 0 ? 0 : getWidthOfLine(currentLine);
         float phraseSpaceWidth = phrase.getSpaceWidth();
+        // Compensate for space buffer if this is not the first phrase
         float phraseWidth = (currentLinePhraseCount > 0 ? phraseSpaceWidth : 0) + phrase.getWidth();
-        if (lineWidth + phraseWidth > width) {
-            // New line is needed.  Split the phrase?
-            float widthRemaining = width - lineWidth;
-            BitmapFont phraseFont = phrase.getFont();
-            String phraseText = phrase.getText();
-            String[] phraseWords = phraseText.split(" ");
-            String newText = "";
+//        Gdx.app.error("NarrativeParagraph.addPhrase", "phrase = '" + phrase.getText() + "'");
+        if (currentLineWidth + phraseWidth > width) {
+//            Gdx.app.error("NarrativeParagraph.addPhrase", "\t" + "Overflow");
+//            Gdx.app.error("NarrativeParagraph.addPhrase", "\t" + "cLW="+currentLineWidth+", pW="+phraseWidth+", w=" + width);
+            // Add a new line for all subsequent calls to use, provided that the current line has at least one phrase
+            if (currentLinePhraseCount > 0) {
+                phrasesByLine.add(new ArrayList<NarrativePhrase>());
+            }
+            // Determine how much of the phrase will fit onto the current line.
+            float pCPS = phrase.getCharactersPerSecond();
+            BitmapFont pFont = phrase.getFont();
+            String[] pWords = phrase.getText().split(" ");
+            float widthRemaining = width - currentLineWidth;
+            String measuringString = "";
             int wordIndex;
             float newPhraseWidth;
-            for (wordIndex = 0; wordIndex < phraseWords.length; wordIndex++) {
-                newText += phraseWords[wordIndex];
-                newPhraseWidth = (currentLinePhraseCount > 0 ? phraseSpaceWidth : 0) + phraseFont.getBounds(newText).width;
+            for (wordIndex = 0; wordIndex < pWords.length; wordIndex++) {
+                if (wordIndex > 0) {
+                    measuringString += " ";
+                }
+                measuringString += pWords[wordIndex];
+                // Compensate for space buffer if this is not the first phrase
+                newPhraseWidth = (currentLinePhraseCount > 0 ? phraseSpaceWidth : 0) + pFont.getBounds(measuringString).width;
+//                Gdx.app.error("NarrativeParagraph.addPhrase", "\t\t" + "measuringString='"+measuringString+"', w=" + newPhraseWidth);
+
                 if (newPhraseWidth > widthRemaining) {
+
+//                    Gdx.app.error("NarrativeParagraph.addPhrase", "\t\t\t" + "overflow found! splitting");
+
+                    // We've found the point of overflow
+
                     if (wordIndex == 0) {
                         // Even the first word overflows
                         if (currentLinePhraseCount == 0) {
                             // Nothing more can be done, this first word just needs to overflow a line.
-                            currentLine.add(new NarrativePhrase(phraseFont, newText, phrase.getCharactersPerSecond()));
-                            // Create a new line
-                            phrasesByLine.add(new ArrayList<NarrativePhrase>());
+                            Gdx.app.error("NarrativeParagraph.addPhrase", "A single word has overflowed the paragraph.");
+                            currentLine.add(new NarrativePhrase(pFont, pWords[0], pCPS));
                             // If there are words remaining, make a new phrase and add it.
-                            if (phraseWords.length > 1) {
-
+                            if (pWords.length > 1) {
+                                String overflowText = Utils.joinStringArray(pWords, 1, pWords.length, " ");
+                                addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
                             }
+                        } else {
+                            // Put this phrase on its own line
+                            addPhrase(phrase);
                         }
+
+                    } else {
+                        // This one didn't work, but the previous one did
+                        String fitText = Utils.joinStringArray(pWords, 0, wordIndex, " ");
+                        String overflowText = Utils.joinStringArray(pWords, wordIndex, pWords.length, " ");
+                        currentLine.add(new NarrativePhrase(pFont, fitText, pCPS));
+                        addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
                     }
+
+                    // Our work here is done.
+                    return;
                 }
             }
+
+            // We shoudln't be here
+            Gdx.app.error("NarrativeParagraph.addPhrase", "Phrase didn't fit, then did.");
+            currentLine.add(phrase);
+
+        } else {
+            // The phrase will fit perfectly well.
+            currentLine.add(phrase);
         }
     }
 
@@ -80,8 +120,10 @@ public class NarrativeParagraph {
     }
 
     public void showAll() {
-        for (NarrativePhrase narrativePhrase : phrases) {
-            narrativePhrase.showAll();
+        for (ArrayList<NarrativePhrase> line : phrasesByLine) {
+            for (NarrativePhrase phrase : line) {
+                phrase.showAll();
+            }
         }
     }
 
@@ -95,35 +137,59 @@ public class NarrativeParagraph {
      */
     public Rectangle render(SpriteBatch batch, float x, float y) {
 
-        float currentX = x;
-        float currentY = y;
+        float currentX;
+        float currentY;
+        float maxWidth = 0;
+
         BitmapFont.TextBounds phraseBounds = null;
         NarrativePhrase phrase;
+        ArrayList<NarrativePhrase> line;
+        int i, j;
 
-        for (int i = 0; i < phrases.size(); i++) {
-            phrase = phrases.get(i);
-            if (i > 0) {
-                // Pad
-                currentX += phrase.getSpaceWidth();
-            }
-            phraseBounds = phrase.render(batch, currentX, currentY);
-            currentX += phraseBounds.width;
-            if (!phrase.isComplete()) {
+        // How many lines will be displayed this render?
+        int linesToRender = phrasesByLine.size();
+        for (i = 0; i < phrasesByLine.size(); i++) {
+            line = phrasesByLine.get(i);
+            // Is the last phrase complete?
+            if (!line.get(line.size() - 1).isComplete()) {
+                linesToRender = i + 1;
                 break;
             }
         }
 
-        float boundingHeight = phraseBounds == null ? 0 : phraseBounds.height;
-        Rectangle r = new Rectangle(x, y, currentX, boundingHeight);
-        return r;
+        lineLoop:for (i = 0; i < linesToRender; i++) {
+            line = phrasesByLine.get(i);
+            currentX = x;
+            currentY = y + ((linesToRender - i - 1) * NarrativeManager.LINE_HEIGHT);
+            for (j = 0; j < line.size(); j++) {
+                phrase = line.get(j);
+                if (j > 0) {
+                    currentX += phrase.getSpaceWidth();
+                }
+                // Render and measure
+                phraseBounds = phrase.render(batch, currentX, currentY);
+                currentX += phraseBounds.width;
+                if (currentX - x > maxWidth) {
+                    maxWidth = currentX - x;
+                }
+                // Abort on the first incomplete phrase
+                if (!phrase.isComplete()) {
+                    break lineLoop;
+                }
+            }
+        }
+
+        return new Rectangle(x, y, maxWidth, linesToRender * NarrativeManager.LINE_HEIGHT);
     }
 
     public void update(float delta) {
         updateTime += delta;
-        for (NarrativePhrase phrase : phrases) {
-            phrase.update(delta);
-            if (!phrase.isComplete()) {
-                break;
+        lineLoop:for (ArrayList<NarrativePhrase> line: phrasesByLine) {
+            for (NarrativePhrase phrase: line) {
+                phrase.update(delta);
+                if (!phrase.isComplete()) {
+                    break lineLoop;
+                }
             }
         }
     }
