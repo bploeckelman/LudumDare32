@@ -1,5 +1,6 @@
 package lando.systems.ld32.killphrase;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -67,7 +68,7 @@ public class KillPhrase {
     }
 
     public void disableLetter() {
-        for(int i=phrase.length; i>0; i--) {
+        for(int i=phrase.length-1; i>=0; i--) {
             if(enabled[i]) {
                 enabled[i] = false;
                 if(phrase[i].equals(space)) {
@@ -95,6 +96,7 @@ public class KillPhrase {
     }
 
     public void render(SpriteBatch batch) {
+        font.setColor(Color.WHITE);
         for(int i=0; i<phrase.length; i++) {
             if(phrase[i].equals(space)) {
                 continue;
