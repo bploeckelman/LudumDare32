@@ -107,6 +107,7 @@ public class FightScreen extends ScreenAdapter {
             staggerTimer = 0f;
             if(keyboardInputAdapter.staggerWindow) {
                 tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate);
+                killPhrase.tweenUp();
             }
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
@@ -161,6 +162,7 @@ public class FightScreen extends ScreenAdapter {
                         enemy.position.y + enemy.keyFrame.getRegionHeight() * enemy.scale);
                     enemy.paused = true;
                     tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
+                    killPhrase.tweenDown();
                 }
             }
             else if (word.bounds.x < player.position.x && !word.disabled) {

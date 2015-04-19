@@ -1,5 +1,9 @@
 package lando.systems.ld32.killphrase;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,11 +13,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
+import lando.systems.ld32.GameInstance;
 
 public class KillPhrase {
     private final String space = " ";
 
     public static float dropRate = 1f;
+    public static float dropOffset = -100f;
 
     public static int boxSize = 32;
     public static int boxSpacing = 4;
@@ -27,6 +33,7 @@ public class KillPhrase {
     public TextBounds[] charBounds;
     public Vector2[] charOrigins;
     public Vector2[] boxOrigins;
+    public MutableFloat[] yOffsets;
     public String typed;
 
     private Vector2 temp = new Vector2();
@@ -44,6 +51,7 @@ public class KillPhrase {
         charBounds = new TextBounds[this.phrase.length];
         charOrigins = new Vector2[this.phrase.length];
         boxOrigins = new Vector2[this.phrase.length];
+        yOffsets = new MutableFloat[this.phrase.length];
 
         float width = 0;
         for(int i=0; i<this.phrase.length; i++) {
@@ -73,6 +81,7 @@ public class KillPhrase {
                 bounds.y + (boxSize/2f) + (charBounds.height/2f)
             );
             boxOrigins[i] = new Vector2(xOffset, bounds.y);
+            yOffsets[i] = new MutableFloat(0f);
         }
     }
 
@@ -130,17 +139,21 @@ public class KillPhrase {
                 continue;
             }
 
-            batch.draw(Assets.killphraseBox, boxOrigins[i].x, boxOrigins[i].y, boxSize, boxSize);
+            batch.draw(
+                Assets.killphraseBox,
+                boxOrigins[i].x,
+                boxOrigins[i].y + yOffsets[i].floatValue(),
+                boxSize, boxSize);
 
             if(enabled[i]) {
-                font.draw(batch, phrase[i], charOrigins[i].x, charOrigins[i].y);
+                font.draw(batch, phrase[i], charOrigins[i].x, charOrigins[i].y + yOffsets[i].floatValue());
             }
         }
 
         font.setColor(Color.RED);
         for (int i = 0; i < typed.length(); ++i) {
             if (typed.charAt(i) == ' ') continue;
-            font.draw(batch, "" + typed.charAt(i), charOrigins[i].x, charOrigins[i].y);
+            font.draw(batch, "" + typed.charAt(i), charOrigins[i].x, charOrigins[i].y + yOffsets[i].floatValue());
         }
         font.setColor(Color.WHITE);
     }
@@ -162,6 +175,26 @@ public class KillPhrase {
         if (keycode == letter) {
             typed += phrase[i];
         }
+    }
+
+    public void tweenDown() {
+        tweenUpDown(true);
+    }
+    public void tweenUp() {
+        tweenUpDown(false);
+    }
+
+    private void tweenUpDown(boolean down) {
+        Timeline timeline = Timeline.createParallel();
+        for(int i=0; i<phrase.length; i++) {
+            if(!phrase[i].equals(space)) {
+                timeline.push(Tween.to(yOffsets[i], -1, dropRate)
+                    .target(down ? dropOffset : 0)
+                    .ease(Bounce.OUT)
+                    .delay(i * .01f));
+            }
+        }
+        timeline.start(GameInstance.tweens);
     }
 
 }
