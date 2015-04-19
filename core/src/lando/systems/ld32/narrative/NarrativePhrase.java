@@ -7,23 +7,52 @@ import com.badlogic.gdx.math.MathUtils;
 public class NarrativePhrase {
 
     private final BitmapFont font;
-    private final String phrase;
+    private final String text;
     private final float charTime;
-
-    private static BitmapFont.TextBounds textBounds;
+    private final float cps;
 
     private float updateTime = 0;
     private boolean revealComplete = false;
 
-    public NarrativePhrase(BitmapFont font, String phrase, float cps) {
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     *
+     * @param font The font
+     * @param text The phrase text
+     * @param cps The rate: characters per second
+     */
+    public NarrativePhrase(BitmapFont font, String text, float cps) {
         this.font = font;
-        this.phrase = phrase;
+        this.text = text;
+        this.cps = cps;
         this.charTime = 1f / cps;
     }
 
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public float getCharactersPerSecond() { return this.cps; }
+
+    public BitmapFont getFont() { return font; }
+
+    /**
+     * @return The width of a space as rendered by this phrase's font.
+     */
     public float getSpaceWidth() {
         return font.getBounds(" ").width;
     }
+
+    public String getText() { return text; }
+
+    /**
+     * @return The width of the full phrase as rendered by this phrase's font.
+     */
+    public float getWidth() {
+        return font.getBounds(text).width;
+    }
+
     public boolean isComplete() {
         return revealComplete;
     }
@@ -36,16 +65,16 @@ public class NarrativePhrase {
      * @return The text bounds of the characters drawn.
      */
     public BitmapFont.TextBounds render(SpriteBatch batch, float x, float y) {
-        String drawString = phrase;
+        String drawString = text;
         if (!revealComplete) {
             int charCount = MathUtils.floor(updateTime / charTime);
-            if (charCount >= phrase.length()) {
+            if (charCount >= text.length()) {
                 revealComplete = true;
             } else {
-                drawString = phrase.substring(0, charCount);
+                drawString = text.substring(0, charCount);
             }
         }
-        textBounds = font.getBounds(drawString);
+        BitmapFont.TextBounds textBounds = font.getBounds(drawString);
         return font.draw(batch, drawString, x, y + textBounds.height);
     }
 
