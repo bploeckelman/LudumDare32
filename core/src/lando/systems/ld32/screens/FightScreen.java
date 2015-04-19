@@ -124,8 +124,11 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
-        for(int i=0; i<attackWords.size; i++) {
-            attackWords.get(i).update(delta);
+        for (AttackWord word : attackWords) {
+            word.update(delta);
+            if (!word.disabled) {
+                word.dangerLevel = 1f - ((word.bounds.x - player.position.x) / (word.origin.x - player.position.x));
+            }
         }
 
         if (attackWords.size > 0) {

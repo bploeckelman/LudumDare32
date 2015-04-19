@@ -28,8 +28,10 @@ public class AttackWord {
 
     public boolean    disabled;
     public Vector2    velocity;
+    public Vector2    origin;
     public BitmapFont font;
     public Rectangle  bounds;
+    public float      dangerLevel = 0f;
 
     public AttackWord(String word, BitmapFont font) {
         this.word = word.toUpperCase();
@@ -43,6 +45,7 @@ public class AttackWord {
         this.bounds = new Rectangle(0, 0, textBounds.width + 2 * bubble_margin, textBounds.height + 2 * bubble_margin);
         this.velocity = new Vector2(default_velocity, 0);
         this.disabled = false;
+        this.origin = new Vector2(bounds.x, bounds.y);
     }
 
     public AttackWord fire(float x, float y) {
@@ -100,7 +103,9 @@ public class AttackWord {
     public void render(SpriteBatch batch) {
         if (!visible) return;
 
+        batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, 1);
         Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+        batch.setColor(1, 1, 1, 1);
 
         if (disabled) return;
 
@@ -108,7 +113,7 @@ public class AttackWord {
         float textY = bounds.y + bounds.height / 2f + textBounds.height / 2f;
         font.draw(batch, word, textX, textY);
 
-        font.setColor(Color.RED);
+        font.setColor(Color.CYAN);
         font.draw(batch, typed, textX, textY);
         font.setColor(Color.WHITE);
     }

@@ -42,6 +42,7 @@ public class Enemy extends Entity {
                 attackDictionary[MathUtils.random(0, attackDictionary.length-1)], font);
             float x = position.x - attackWord.bounds.width - 5f;
             float y = position.y + keyFrame.getRegionHeight() * scale - 5f;
+            attackWord.origin.set(x, y);
             return attackWord.fire(x, y);
         }
 
