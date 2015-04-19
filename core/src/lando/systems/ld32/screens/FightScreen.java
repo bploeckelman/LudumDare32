@@ -1,5 +1,9 @@
 package lando.systems.ld32.screens;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.equations.Quint;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -12,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
@@ -24,6 +29,7 @@ import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
 import lando.systems.ld32.input.KeyboardInputAdapter;
 import lando.systems.ld32.killphrase.KillPhrase;
+import lando.systems.ld32.tweens.RectangleAccessor;
 
 public class FightScreen extends ScreenAdapter {
     GameInstance game;
@@ -41,7 +47,7 @@ public class FightScreen extends ScreenAdapter {
     Array<AttackWord> attackWords;
     KillPhrase        killPhrase;
 
-    Player player;
+    Player      player;
     Array<Puff> puffs;
     StunStars stunStars;
 
@@ -84,6 +90,8 @@ public class FightScreen extends ScreenAdapter {
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
+        GameInstance.tweens.update(delta);
+
         for (int i = puffs.size - 1; i >= 0; --i) {
             final Puff puff = puffs.get(i);
             puff.update(delta);
@@ -116,11 +124,28 @@ public class FightScreen extends ScreenAdapter {
         }
 
         if (attackWords.size > 0) {
-            if (attackWords.first().isComplete()) {
-                doPuff(attackWords.first().bounds, 3f);
+            final AttackWord word = attackWords.first();
+            if (word.isComplete() && !word.disabled) {
+                word.disabled = true;
+                doPuff(word.bounds, 3f);
 
-                attackWords.removeIndex(0);
-                killPhrase.enableLetter();
+                Vector2 targetLetter = killPhrase.enableLetter();
+                if (targetLetter == null) {
+                    attackWords.removeValue(word, true);
+                } else {
+                    word.velocity.set(0, 0);
+                    Tween.to(word.bounds, RectangleAccessor.XYWH, 0.8f)
+                         .target(targetLetter.x, targetLetter.y, 0, 0)
+                         .ease(Quint.OUT)
+                         .setCallback(new TweenCallback() {
+                             @Override
+                             public void onEvent(int i, BaseTween<?> baseTween) {
+                                 attackWords.removeValue(word, true);
+                             }
+                         })
+                         .start(GameInstance.tweens);
+                }
+
                 if (killPhrase.isComplete()) {
                     staggerTimer = stagger_time;
                     keyboardInputAdapter.staggerWindow = true;
@@ -133,11 +158,26 @@ public class FightScreen extends ScreenAdapter {
                     enemy.paused = true;
                 }
             }
-            else if (attackWords.first().bounds.x < player.position.x) {
-                doPuff(attackWords.first().bounds, 2f);
+            else if (word.bounds.x < player.position.x && !word.disabled) {
+                word.disabled = true;
+                doPuff(word.bounds, 2f);
 
-                attackWords.removeIndex(0);
-                killPhrase.disableLetter();
+                Vector2 targetLetter = killPhrase.disableLetter();
+                if (targetLetter == null) {
+                    attackWords.removeValue(word, true);
+                } else {
+                    word.velocity.set(0, 0);
+                    Tween.to(word.bounds, RectangleAccessor.XYWH, 0.8f)
+                         .target(targetLetter.x, targetLetter.y, 0, 0)
+                         .ease(Quint.OUT)
+                         .setCallback(new TweenCallback() {
+                             @Override
+                             public void onEvent(int i, BaseTween<?> baseTween) {
+                                 attackWords.removeValue(word, true);
+                             }
+                         })
+                         .start(GameInstance.tweens);
+                }
             }
         }
 

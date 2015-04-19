@@ -26,6 +26,8 @@ public class KillPhrase {
     public Vector2[] boxOrigins;
     public String typed;
 
+    private Vector2 temp = new Vector2();
+
     private String fullPhrase;
     private String[] phrase;
     private BitmapFont font;
@@ -60,28 +62,30 @@ public class KillPhrase {
         }
     }
 
-    public void enableLetter() {
+    public Vector2 enableLetter() {
         for(int i=0; i<phrase.length; i++) {
             if(!enabled[i]) {
                 enabled[i] = true;
                 if(phrase[i].equals(space)) {
                     continue;
                 }
-                break;
+                return temp.set(boxOrigins[i].x + boxSize / 2f, boxOrigins[i].y + boxSize / 2f).cpy();
             }
         }
+        return null;
     }
 
-    public void disableLetter() {
+    public Vector2 disableLetter() {
         for(int i=phrase.length-1; i>=0; i--) {
             if(enabled[i]) {
                 enabled[i] = false;
                 if(phrase[i].equals(space)) {
                     continue;
                 }
-                break;
+                return temp.set(boxOrigins[i].x + boxSize / 2f, boxOrigins[i].y + boxSize / 2f).cpy();
             }
         }
+        return null;
     }
 
     public boolean isComplete() {
@@ -122,7 +126,7 @@ public class KillPhrase {
         font.setColor(Color.RED);
         for (int i = 0; i < typed.length(); ++i) {
             if (typed.charAt(i) == ' ') continue;
-            font.draw(batch, ""+typed.charAt(i), charOrigins[i].x, charOrigins[i].y);
+            font.draw(batch, "" + typed.charAt(i), charOrigins[i].x, charOrigins[i].y);
         }
         font.setColor(Color.WHITE);
     }

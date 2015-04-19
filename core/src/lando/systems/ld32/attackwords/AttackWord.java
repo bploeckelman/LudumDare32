@@ -26,6 +26,7 @@ public class AttackWord {
     float flashTimer;
     boolean visible;
 
+    public boolean    disabled;
     public Vector2    velocity;
     public BitmapFont font;
     public Rectangle  bounds;
@@ -41,6 +42,7 @@ public class AttackWord {
         this.textBounds = new TextBounds(font.getBounds(this.word));
         this.bounds = new Rectangle(0, 0, textBounds.width + 2 * bubble_margin, textBounds.height + 2 * bubble_margin);
         this.velocity = new Vector2(default_velocity, 0);
+        this.disabled = false;
     }
 
     public AttackWord fire(float x, float y) {
@@ -99,6 +101,8 @@ public class AttackWord {
         if (!visible) return;
 
         Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+
+        if (disabled) return;
 
         float textX = bounds.x + bounds.width  / 2f - textBounds.width  / 2f;
         float textY = bounds.y + bounds.height / 2f + textBounds.height / 2f;
