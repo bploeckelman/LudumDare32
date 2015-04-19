@@ -37,9 +37,10 @@ public class AttackWord {
         this.velocity = new Vector2(default_velocity, 0);
     }
 
-    public void fire(float x, float y) {
+    public AttackWord fire(float x, float y) {
         typed = "";
         bounds.set(x, y, textBounds.width + 2 * bubble_margin, textBounds.height + 2 * bubble_margin);
+        return this;
     }
 
     public void keyTyped(int keycode) {
