@@ -114,6 +114,8 @@ public class FightScreen extends ScreenAdapter {
             /*
              * Render Stuff!
              */
+            batch.draw(Assets.background1, 0, 0, sceneCamera.viewportWidth, sceneCamera.viewportHeight);
+
             enemy.render(batch);
             for(int i=0; i<attackWords.size; i++) {
                 attackWords.get(i).render(batch);
