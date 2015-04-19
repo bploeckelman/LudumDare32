@@ -17,11 +17,10 @@ import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.entities.Enemy;
+import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
 import lando.systems.ld32.input.KeyboardInputAdapter;
 import lando.systems.ld32.killphrase.KillPhrase;
-
-import java.util.ArrayList;
 
 public class FightScreen extends ScreenAdapter {
     GameInstance game;
@@ -54,14 +53,9 @@ public class FightScreen extends ScreenAdapter {
         sceneCamera.update();
 
         font.setColor(0, 0, 0, 1);
-        enemy = new Enemy(font);
+        enemy = EnemyFactory.getBoss(font, 1);
         attackWords = new Array<AttackWord>();
-        killPhrase = new KillPhrase("MY AWESOME PHRASE", font);
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
+        killPhrase = new KillPhrase(enemy.killPhrase, font);
         player = new Player();
 
         keyboardInputAdapter = new KeyboardInputAdapter(attackWords);
@@ -96,6 +90,11 @@ public class FightScreen extends ScreenAdapter {
                 attackWords.removeIndex(0);
                 killPhrase.disableLetter();
             }
+        }
+
+        if(killPhrase.isComplete()) {
+            enemy = EnemyFactory.getBoss(font, 1);
+            killPhrase = new KillPhrase(enemy.killPhrase, font);
         }
 
         player.update(delta);

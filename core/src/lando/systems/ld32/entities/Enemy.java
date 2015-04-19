@@ -3,9 +3,8 @@ package lando.systems.ld32.entities;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.attackwords.AttackWord;
 
@@ -14,27 +13,33 @@ public class Enemy extends Entity {
     float attackDelay;
     BitmapFont font;
     float scale = 2.5f;
+    String[] attackDictionary;
+    public String killPhrase;
 
-    public Enemy(BitmapFont font) {
+    public Enemy(
+        BitmapFont font,
+        Animation animation,
+        float attackDelay,
+        String[] attackDictionary,
+        String killPhrase)
+    {
         this.font = font;
+        this.animation = animation;
+        this.attackDelay = attackDelay;
+        this.attackDictionary = attackDictionary;
+        this.killPhrase = killPhrase;
 
-        // TODO: Temporary animation
-        animation = new Animation(
-            .2f,
-            new TextureRegion(Assets.enemyRegions[0][0]),
-            new TextureRegion(Assets.enemyRegions[1][0]));
-        animation.setPlayMode(Animation.PlayMode.LOOP);
         keyFrame = animation.getKeyFrame(animationTimer);
 
         attackTimer = 0;
-        attackDelay = 3;
         position = new Vector2(Constants.win_width*.8f, Constants.win_height*.1f);
     }
 
     public AttackWord generateAttack() {
         if(attackTimer >= attackDelay) {
             attackTimer = 0;
-            AttackWord attackWord = new AttackWord("I ATTACK U", font);
+            AttackWord attackWord = new AttackWord(
+                attackDictionary[MathUtils.random(0, attackDictionary.length-1)], font);
             float x = position.x - attackWord.bounds.width - 5f;
             float y = position.y + keyFrame.getRegionHeight() * scale - 5f;
             return attackWord.fire(x, y);
