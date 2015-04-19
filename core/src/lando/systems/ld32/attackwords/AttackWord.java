@@ -59,6 +59,13 @@ public class AttackWord {
             return;
         }
 
+        if (letters[i].equals(" ")) {
+            typed += letters[i];
+            if (++i >= letters.length) {
+                return;
+            }
+        }
+
         int letter = Input.Keys.valueOf(letters[i]);
         if (keycode == letter) {
             typed += letters[i];

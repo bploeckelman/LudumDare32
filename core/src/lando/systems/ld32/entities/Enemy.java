@@ -34,7 +34,7 @@ public class Enemy extends Entity {
     public AttackWord generateAttack() {
         if(attackTimer >= attackDelay) {
             attackTimer = 0;
-            AttackWord attackWord = new AttackWord("ATTACK", font);
+            AttackWord attackWord = new AttackWord("I ATTACK U", font);
             float x = position.x - attackWord.bounds.width - 5f;
             float y = position.y + keyFrame.getRegionHeight() * scale - 5f;
             return attackWord.fire(x, y);
