@@ -47,6 +47,8 @@ public class AttackWord {
     }
 
     public void keyTyped(int keycode) {
+        if (moveDelay > 0f) return;
+
         int i = typed.length();
         if (i >= letters.length) {
             return;
