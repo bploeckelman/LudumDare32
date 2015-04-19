@@ -18,6 +18,7 @@ import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.effects.Puff;
+import lando.systems.ld32.effects.StunStars;
 import lando.systems.ld32.entities.Enemy;
 import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
@@ -42,6 +43,7 @@ public class FightScreen extends ScreenAdapter {
 
     Player player;
     Array<Puff> puffs;
+    StunStars stunStars;
 
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
@@ -69,6 +71,7 @@ public class FightScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(keyboardInputAdapter);
 
         puffs = new Array<Puff>();
+        stunStars = new StunStars();
     }
 
     @Override
@@ -95,6 +98,8 @@ public class FightScreen extends ScreenAdapter {
             staggerTimer = 0f;
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
+            stunStars.alive = false;
+            enemy.paused = false;
         }
 
         enemy.update(delta);
@@ -121,6 +126,11 @@ public class FightScreen extends ScreenAdapter {
                     keyboardInputAdapter.staggerWindow = true;
                     // TODO: puff all attack words prior to clearing
                     attackWords.clear();
+                    stunStars.init(
+                        enemy.position.x +
+                            (Assets.stunStarsRegions[0][0].getRegionWidth()/2) * StunStars.stunstars_scale,
+                        enemy.position.y + enemy.keyFrame.getRegionHeight() * enemy.scale);
+                    enemy.paused = true;
                 }
             }
             else if (attackWords.first().bounds.x < player.position.x) {
@@ -136,6 +146,10 @@ public class FightScreen extends ScreenAdapter {
             enemy = EnemyFactory.getBoss(font, 1);
             killPhrase = new KillPhrase(enemy.killPhrase, font);
             keyboardInputAdapter.killPhrase = killPhrase;
+        }
+
+        if(stunStars.alive) {
+            stunStars.update(delta);
         }
 
         player.update(delta);
@@ -161,6 +175,9 @@ public class FightScreen extends ScreenAdapter {
                 attackWords.get(i).render(batch);
             }
             killPhrase.render(batch);
+            if(stunStars.alive) {
+                stunStars.render(batch);
+            }
 
             player.render(batch);
 

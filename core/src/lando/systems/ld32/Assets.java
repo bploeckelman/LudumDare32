@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lando.systems.ld32.effects.Puff;
+import lando.systems.ld32.effects.StunStars;
 
 public class Assets {
 
@@ -17,11 +18,14 @@ public class Assets {
     public static Texture speechBubbleTexture;
     public static Texture enemyTexture;
     public static Texture effectsTexture;
+    public static Texture stunStarsTexture;
     public static TextureRegion[][] enemyRegions;
     public static TextureRegion[][] effectsRegions;
+    public static TextureRegion[][] stunStarsRegions;
     public static NinePatch speechBubble;
 
     public static Animation puffAnimation;
+    public static Animation stunStarsAnimation;
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
@@ -35,19 +39,27 @@ public class Assets {
         speechBubbleTexture = new Texture("speech-bubble.png");
         enemyTexture = new Texture("oryx_16bit_scifi_creatures_extra_trans.png");
         effectsTexture = new Texture("oryx_16bit_scifi_FX_lg_trans.png");
+        stunStarsTexture = new Texture("stun-stars.png");
         enemyRegions = TextureRegion.split(enemyTexture, 24, 24);
         effectsRegions = TextureRegion.split(effectsTexture, 32, 32);
+        stunStarsRegions = TextureRegion.split(stunStarsTexture, 24, 16);
         speechBubble = new NinePatch(speechBubbleTexture, 5, 5, 5, 5);
 
         // Animations
         puffAnimation = new Animation(
             Puff.puff_time,
-            Assets.effectsRegions[2][3],
-            Assets.effectsRegions[2][4],
-            Assets.effectsRegions[10][4],
-            Assets.effectsRegions[10][5],
-            Assets.effectsRegions[10][6],
-            Assets.effectsRegions[10][7]);
+            effectsRegions[2][3],
+            effectsRegions[2][4],
+            effectsRegions[10][4],
+            effectsRegions[10][5],
+            effectsRegions[10][6],
+            effectsRegions[10][7]);
+        stunStarsAnimation = new Animation(
+            StunStars.stunstars_time,
+            stunStarsRegions[0][0],
+            stunStarsRegions[0][1],
+            stunStarsRegions[0][2]);
+        stunStarsAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
 
         // TODO: Temporary animations

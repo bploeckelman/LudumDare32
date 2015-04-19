@@ -12,7 +12,7 @@ public class Enemy extends Entity {
     float attackTimer;
     float attackDelay;
     BitmapFont font;
-    float scale = 2.5f;
+    public float scale = 2.5f;
     String[] attackDictionary;
     public String killPhrase;
 
