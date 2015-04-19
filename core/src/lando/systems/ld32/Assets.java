@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import lando.systems.ld32.effects.Puff;
 
 public class Assets {
 
@@ -19,6 +20,8 @@ public class Assets {
     public static TextureRegion[][] enemyRegions;
     public static TextureRegion[][] effectsRegions;
     public static NinePatch speechBubble;
+
+    public static Animation puffAnimation;
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
@@ -35,6 +38,16 @@ public class Assets {
         enemyRegions = TextureRegion.split(enemyTexture, 24, 24);
         effectsRegions = TextureRegion.split(effectsTexture, 32, 32);
         speechBubble = new NinePatch(speechBubbleTexture, 5, 5, 5, 5);
+
+        // Animations
+        puffAnimation = new Animation(
+            Puff.puff_time,
+            Assets.effectsRegions[2][3],
+            Assets.effectsRegions[2][4],
+            Assets.effectsRegions[10][4],
+            Assets.effectsRegions[10][5],
+            Assets.effectsRegions[10][6],
+            Assets.effectsRegions[10][7]);
 
 
         // TODO: Temporary animations
