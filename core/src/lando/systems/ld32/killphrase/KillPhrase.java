@@ -13,12 +13,13 @@ import lando.systems.ld32.Constants;
 public class KillPhrase {
     private final String space = " ";
 
-    public static Rectangle bounds = new Rectangle(
-        5, Constants.win_height-100, Constants.win_width, Constants.win_height
-    );
     public static int boxSize = 32;
     public static int boxSpacing = 4;
     public static int spaceSize = 16;
+
+    public static Rectangle bounds = new Rectangle(
+        5, Constants.win_height-100, Constants.win_width, boxSize
+    );
 
     public boolean[] enabled;
     public TextBounds[] charBounds;
@@ -42,9 +43,20 @@ public class KillPhrase {
         charOrigins = new Vector2[this.phrase.length];
         boxOrigins = new Vector2[this.phrase.length];
 
-        float xOffset = bounds.x;
+        float width = 0;
         for(int i=0; i<this.phrase.length; i++) {
             this.phrase[i] = String.valueOf(fullPhrase.charAt(i));
+            if(this.phrase[i].equals(space)) {
+                width += spaceSize + boxSpacing;
+            } else {
+                width += boxSize + boxSpacing;
+            }
+        }
+        bounds.setX((Constants.win_width/2) - (width/2));
+        bounds.setWidth(width);
+
+        float xOffset = bounds.x;
+        for(int i=0; i<this.phrase.length; i++) {
             enabled[i] = false;
             TextBounds charBounds = font.getBounds(this.phrase[i]);
 
