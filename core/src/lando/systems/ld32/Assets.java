@@ -21,6 +21,7 @@ public class Assets {
     public static NinePatch speechBubble;
 
     public static Animation defaultEnemyAnimation;
+    public static Animation defaultEnemyAnimation2;
 
     public static void load() {
         batch = new SpriteBatch();
@@ -36,12 +37,17 @@ public class Assets {
         speechBubble = new NinePatch(speechBubbleTexture, 5, 5, 5, 5);
 
 
-        // TODO: Temporary animation
+        // TODO: Temporary animations
         defaultEnemyAnimation = new Animation(
             .3f,
             new TextureRegion(enemyRegions[0][0]),
             new TextureRegion(enemyRegions[1][0]));
         defaultEnemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        defaultEnemyAnimation2 = new Animation(
+                .3f,
+                new TextureRegion(enemyRegions[2][0]),
+                new TextureRegion(enemyRegions[3][0]));
+        defaultEnemyAnimation2.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     public static void dispose() {

@@ -25,19 +25,23 @@ import lando.systems.ld32.killphrase.KillPhrase;
 public class FightScreen extends ScreenAdapter {
     GameInstance game;
 
-    BitmapFont font;
-    Color backgroundColor;
-    FrameBuffer sceneFBO;
-    TextureRegion sceneRegion;
+    // TODO: set relative to kill phrase length or enemy strength?
+    private static final float stagger_time = 4f;
+
+    BitmapFont         font;
+    Color              backgroundColor;
+    FrameBuffer        sceneFBO;
+    TextureRegion      sceneRegion;
     OrthographicCamera sceneCamera;
 
-    Enemy enemy;
+    Enemy             enemy;
     Array<AttackWord> attackWords;
-    KillPhrase killPhrase;
+    KillPhrase        killPhrase;
 
     Player player;
 
     KeyboardInputAdapter keyboardInputAdapter;
+    float                staggerTimer;
 
     public FightScreen(GameInstance game) {
         this.game = game;
@@ -58,7 +62,7 @@ public class FightScreen extends ScreenAdapter {
         killPhrase = new KillPhrase(enemy.killPhrase, font);
         player = new Player();
 
-        keyboardInputAdapter = new KeyboardInputAdapter(attackWords);
+        keyboardInputAdapter = new KeyboardInputAdapter(attackWords, killPhrase);
         Gdx.input.setInputProcessor(keyboardInputAdapter);
     }
 
@@ -72,11 +76,22 @@ public class FightScreen extends ScreenAdapter {
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
-        enemy.update(delta);
-        AttackWord word = enemy.generateAttack();
-        if(word != null) {
-            attackWords.add(word);
+        staggerTimer -= delta;
+        if (staggerTimer <= 0f) {
+            staggerTimer = 0f;
+            keyboardInputAdapter.staggerWindow = false;
+            killPhrase.typed = "";
         }
+
+        enemy.update(delta);
+
+        if (staggerTimer == 0f) {
+            AttackWord word = enemy.generateAttack();
+            if (word != null) {
+                attackWords.add(word);
+            }
+        }
+
         for(int i=0; i<attackWords.size; i++) {
             attackWords.get(i).update(delta);
         }
@@ -85,6 +100,11 @@ public class FightScreen extends ScreenAdapter {
             if (attackWords.first().isComplete()) {
                 attackWords.removeIndex(0);
                 killPhrase.enableLetter();
+                if (killPhrase.isComplete()) {
+                    staggerTimer = stagger_time;
+                    keyboardInputAdapter.staggerWindow = true;
+                    attackWords.clear();
+                }
             }
             else if (attackWords.first().bounds.x < player.position.x) {
                 attackWords.removeIndex(0);
@@ -92,9 +112,11 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
-        if(killPhrase.isComplete()) {
+        if (killPhrase.isTyped()) {
+            // TODO: perform a fancy fanfare and revert back to overworld
             enemy = EnemyFactory.getBoss(font, 1);
             killPhrase = new KillPhrase(enemy.killPhrase, font);
+            keyboardInputAdapter.killPhrase = killPhrase;
         }
 
         player.update(delta);

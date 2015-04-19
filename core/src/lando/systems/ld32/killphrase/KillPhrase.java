@@ -1,5 +1,6 @@
 package lando.systems.ld32.killphrase;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
@@ -23,12 +24,16 @@ public class KillPhrase {
     public TextBounds[] charBounds;
     public Vector2[] charOrigins;
     public Vector2[] boxOrigins;
+    public String typed;
 
+    private String fullPhrase;
     private String[] phrase;
     private BitmapFont font;
 
     public KillPhrase(String phrase, BitmapFont font) {
         this.font = font;
+        this.typed = "";
+        this.fullPhrase = phrase.toUpperCase();
         this.phrase = new String[phrase.length()];
         enabled = new boolean[this.phrase.length];
         charBounds = new TextBounds[this.phrase.length];
@@ -37,7 +42,7 @@ public class KillPhrase {
 
         float xOffset = bounds.x;
         for(int i=0; i<this.phrase.length; i++) {
-            this.phrase[i] = String.valueOf(phrase.charAt(i));
+            this.phrase[i] = String.valueOf(fullPhrase.charAt(i));
             enabled[i] = false;
             TextBounds charBounds = font.getBounds(this.phrase[i]);
 
@@ -89,10 +94,15 @@ public class KillPhrase {
         return true;
     }
 
+    public boolean isTyped() {
+        return typed.equals(fullPhrase);
+    }
+
     public void clean() {
         for(int i=0; i<phrase.length; i++) {
             enabled[i] = false;
         }
+        typed = "";
     }
 
     public void render(SpriteBatch batch) {
@@ -108,5 +118,32 @@ public class KillPhrase {
                 font.draw(batch, phrase[i], charOrigins[i].x, charOrigins[i].y);
             }
         }
+
+        font.setColor(Color.RED);
+        for (int i = 0; i < typed.length(); ++i) {
+            if (typed.charAt(i) == ' ') continue;
+            font.draw(batch, ""+typed.charAt(i), charOrigins[i].x, charOrigins[i].y);
+        }
+        font.setColor(Color.WHITE);
     }
+
+    public void keyTyped(int keycode) {
+        int i = typed.length();
+        if (i >= phrase.length) {
+            return;
+        }
+
+        if (phrase[i].equals(" ")) {
+            typed += phrase[i];
+            if (++i >= phrase.length) {
+                return;
+            }
+        }
+
+        int letter = Input.Keys.valueOf(phrase[i]);
+        if (keycode == letter) {
+            typed += phrase[i];
+        }
+    }
+
 }

@@ -17,6 +17,17 @@ public class EnemyFactory {
         bosses = new HashMap<String, Config>();
         killPhrases = new HashMap<String, String[]>();
 
+        bosses.put("Fubar", new Config(
+                Assets.defaultEnemyAnimation2,
+                3,
+                new String[]{"SMASH", "BLARGH", "GLOOP", "FOOLISH MORTAL", "PANCAKES"}));
+
+        killPhrases.put("Fubar", new String[]{
+                "BACON PANCAKES",
+                "WORDS AND STUFF",
+                "I ATE IT ALL"
+        });
+
         bosses.put("Gozer", new Config(
             Assets.defaultEnemyAnimation,
             3,
@@ -46,7 +57,12 @@ public class EnemyFactory {
     }
 
     public static Enemy getBoss(BitmapFont font, int level) {
-        String[] phrases = killPhrases.get("Gozer");
-        return createEnemy(font, bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length-1)]);
+        if (MathUtils.randomBoolean()) {
+            String[] phrases = killPhrases.get("Gozer");
+            return createEnemy(font, bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length - 1)]);
+        } else {
+            String[] phrases = killPhrases.get("Fubar");
+            return createEnemy(font, bosses.get("Fubar"), phrases[MathUtils.random(0, phrases.length - 1)]);
+        }
     }
 }
