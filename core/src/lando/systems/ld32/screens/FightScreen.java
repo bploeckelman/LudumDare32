@@ -205,14 +205,15 @@ public class FightScreen extends ScreenAdapter {
 
                 if (killPhrase.isComplete()) {
                     staggerTimer = stagger_time;
+                    Assets.timerAnimation.setFrameDuration(stagger_time / Assets.timerAnimation.getKeyFrames().length);
                     keyboardInputAdapter.staggerWindow = true;
-                    shake.shake(1f);
 
                     for (AttackWord attackWord : attackWords) {
                         doPuff(attackWord.bounds, 2f);
                     }
                     attackWords.clear();
 
+                    shake.shake(1f);
                     stunStars.init(
                         enemy.position.x +
                             (Assets.stunStarsRegions[0][0].getRegionWidth() / 2) * StunStars.stunstars_scale,
@@ -261,6 +262,8 @@ public class FightScreen extends ScreenAdapter {
                 spellWord.removeSpell(this);
                 spellWord = null;
             }
+            staggerTimer = 0f;
+            timerStateTime = 0f;
 
             keyboardInputAdapter.spellWord = null;
             keyboardInputAdapter.killPhrase = killPhrase;
