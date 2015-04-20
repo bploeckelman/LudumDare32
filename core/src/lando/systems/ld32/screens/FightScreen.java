@@ -334,18 +334,20 @@ public class FightScreen extends ScreenAdapter {
              * Render Stuff!
              */
             batch.setColor(backgroundColor);
+            final float bgx = -64;
+            final float bgy = -64;
+            final float width = sceneCamera.viewportWidth + 128;
+            final float height = sceneCamera.viewportHeight + 128;
             if (seasick) {
-                final float width = sceneCamera.viewportWidth + 128;
-                final float height = sceneCamera.viewportHeight + 128;
                 batch.draw(Assets.forestBackgroundRegion,
-                           -64, -64,
+                           bgx, bgy,
                            width / 2f,
                            height / 2f,
                            width, height,
                            1, 1,
                            seasickAngle);
             } else {
-                batch.draw(Assets.forestBackground, -64, -64);
+                batch.draw(Assets.forestBackground, bgx, bgy, width, height);
             }
 
             player.render(batch);
