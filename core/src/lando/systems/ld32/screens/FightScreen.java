@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -33,10 +32,9 @@ import lando.systems.ld32.entities.EnemyFactory;
 import lando.systems.ld32.entities.Player;
 import lando.systems.ld32.input.KeyboardInputAdapter;
 import lando.systems.ld32.killphrase.KillPhrase;
+import lando.systems.ld32.spellwords.SpellWord;
 import lando.systems.ld32.tweens.ColorAccessor;
 import lando.systems.ld32.tweens.RectangleAccessor;
-import lando.systems.ld32.spellwords.Silence;
-import lando.systems.ld32.spellwords.SpellWord;
 
 public class FightScreen extends ScreenAdapter {
     GameInstance game;
@@ -255,8 +253,10 @@ public class FightScreen extends ScreenAdapter {
             enemy = EnemyFactory.getBoss(1);
             killPhrase = new KillPhrase(enemy.killPhrase);
 
-            spellWord.removeSpell(this);
-            spellWord = null;
+            if (spellWord != null) {
+                spellWord.removeSpell(this);
+                spellWord = null;
+            }
 
             keyboardInputAdapter.spellWord = null;
             keyboardInputAdapter.killPhrase = killPhrase;

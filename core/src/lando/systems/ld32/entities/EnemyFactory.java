@@ -49,7 +49,7 @@ public class EnemyFactory {
                 "YOUR MOM"
             },
             new SpellWord.Type[]{
-                SpellWord.Type.SILENCE
+                SpellWord.Type.QUIET
             }
         ));
 

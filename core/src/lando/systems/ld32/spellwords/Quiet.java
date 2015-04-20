@@ -3,10 +3,10 @@ package lando.systems.ld32.spellwords;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.screens.FightScreen;
 
-public class Silence extends SpellWord {
+public class Quiet extends SpellWord {
 
-    public Silence() {
-        super("SILENCE");
+    public Quiet() {
+        super("QUIET");
     }
 
     public void applySpell(FightScreen fightScreen) {
