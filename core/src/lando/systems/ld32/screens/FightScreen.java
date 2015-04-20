@@ -288,7 +288,7 @@ public class FightScreen extends ScreenAdapter {
              * Render Stuff!
              */
             batch.setColor(backgroundColor);
-            batch.draw(Assets.background1, 0, 0, sceneCamera.viewportWidth, sceneCamera.viewportHeight);
+            batch.draw(Assets.forestBackground, -64, -64);
 
             enemy.render(batch);
             for(int i=0; i<attackWords.size; i++) {

@@ -22,6 +22,7 @@ public class Assets {
     public static ShaderProgram postShader;
 
     public static Texture background1;
+    public static Texture forestBackground;
     public static Texture killphraseBox;
     public static Texture speechBubbleTexture;
     public static Texture enemyTexture;
@@ -39,6 +40,13 @@ public class Assets {
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
+    public static Animation librarianAnimation;
+    public static Animation ogreAnimation;
+    public static Animation batAnimation;
+    public static Animation scorpionAnimation;
+    public static Animation waterCubeAnimation;
+    public static Animation beholderAnimation;
+    public static Animation chickenAnimation;
 
     public static void load() {
         batch = new SpriteBatch();
@@ -56,6 +64,7 @@ public class Assets {
                 Gdx.files.internal("shaders/post.frag"));
 
         background1 = new Texture("background1.png");
+        forestBackground = new Texture("fight-screen-forest.png");
         killphraseBox = new Texture("killphrase-box.png");
         speechBubbleTexture = new Texture("speech-bubble.png");
         enemyTexture = new Texture("oryx_16bit_scifi_creatures_extra_trans.png");
@@ -92,19 +101,43 @@ public class Assets {
             effectsRegions[1][2],
             effectsRegions[1][3]);
 
-
-
         // TODO: Temporary animations
-        defaultEnemyAnimation = new Animation(
-            .3f,
+        defaultEnemyAnimation = new Animation(.3f,
             new TextureRegion(enemyRegions[0][0]),
             new TextureRegion(enemyRegions[1][0]));
         defaultEnemyAnimation.setPlayMode(Animation.PlayMode.LOOP);
-        defaultEnemyAnimation2 = new Animation(
-                .3f,
-                new TextureRegion(enemyRegions[2][0]),
-                new TextureRegion(enemyRegions[3][0]));
+        defaultEnemyAnimation2 = new Animation(.3f,
+            new TextureRegion(enemyRegions[2][0]),
+            new TextureRegion(enemyRegions[3][0]));
         defaultEnemyAnimation2.setPlayMode(Animation.PlayMode.LOOP);
+        librarianAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[6][9]),
+            new TextureRegion(enemyRegions[7][9]));
+        librarianAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        ogreAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[0][1]),
+            new TextureRegion(enemyRegions[1][1]));
+        ogreAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        batAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[6][2]),
+            new TextureRegion(enemyRegions[7][2]));
+        batAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        scorpionAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[0][7]),
+            new TextureRegion(enemyRegions[1][7]));
+        scorpionAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        waterCubeAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[2][11]),
+            new TextureRegion(enemyRegions[3][11]));
+        waterCubeAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        beholderAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[6][4]),
+            new TextureRegion(enemyRegions[7][4]));
+        beholderAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        chickenAnimation = new Animation(0.25f,
+            new TextureRegion(enemyRegions[4][14]),
+            new TextureRegion(enemyRegions[5][14]));
+        chickenAnimation.setPlayMode(Animation.PlayMode.LOOP);
     }
 
     public static void dispose() {
