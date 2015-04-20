@@ -51,6 +51,10 @@ public class KeyboardInputAdapter extends InputAdapter {
             shiftDown = false;
         }
 
+        if (keycode == Input.Keys.ENTER) {
+
+        }
+
         return false;
     }
 

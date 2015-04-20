@@ -59,6 +59,9 @@ public class NarrativePhrase {
     public NarrativePhrase(BitmapFont font, String text, float cps) {
         this(font, text, cps, Effect.NONE);
     }
+    public NarrativePhrase(BitmapFont font, String text) {
+        this(font, text, NarrativeManager.CPS, Effect.NONE);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

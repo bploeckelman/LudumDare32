@@ -83,6 +83,11 @@ public class FightScreen extends ScreenAdapter {
     float accum = 0f;
     float timerStateTime = 0f;
 
+    public boolean enableAttackWords = false;
+    public boolean enableSpellWords = false;
+    public boolean enableKillPhrase = false;
+
+
     public FightScreen(GameInstance game) {
         this.game = game;
 
@@ -158,7 +163,9 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
-        killPhrase.update(delta);
+        if (enableKillPhrase) {
+            killPhrase.update(delta);
+        }
 
         staggerTimer -= delta;
         if (staggerTimer <= 0f) {
@@ -180,16 +187,20 @@ public class FightScreen extends ScreenAdapter {
         enemy.update(delta);
 
         if (staggerTimer == 0f) {
-            AttackWord word = enemy.generateAttack();
-            if (word != null) {
-                attackWords.add(word);
-            }
-            if (spellWord == null) {
-                spellWord = enemy.generateSpell();
-                if (spellWord != null) {
-                    spellWord.applySpell(this);
+            if (enableAttackWords) {
+                AttackWord word = enemy.generateAttack();
+                if (word != null) {
+                    attackWords.add(word);
                 }
-                keyboardInputAdapter.spellWord = spellWord;
+            }
+            if (enableSpellWords) {
+                if (spellWord == null) {
+                    spellWord = enemy.generateSpell();
+                    if (spellWord != null) {
+                        spellWord.applySpell(this);
+                    }
+                    keyboardInputAdapter.spellWord = spellWord;
+                }
             }
         }
 
@@ -394,9 +405,11 @@ public class FightScreen extends ScreenAdapter {
                 counterSpell.render(batch);
             }
 
-            killPhrase.render(batch);
-            if (staggerTimer > 0f) {
-                batch.draw(Assets.timerAnimation.getKeyFrame(timerStateTime), Constants.win_width / 2f - 32, Constants.win_height / 2f - 32);
+            if (enableKillPhrase) {
+                killPhrase.render(batch);
+                if (staggerTimer > 0f) {
+                    batch.draw(Assets.timerAnimation.getKeyFrame(timerStateTime), Constants.win_width / 2f - 32, Constants.win_height / 2f - 32);
+                }
             }
 
             batch.end();

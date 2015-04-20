@@ -20,19 +20,20 @@ public class Assets {
 
     public static Texture[] timerTextures;
     public static Texture background1;
-    public static Texture libraryBackground;
-    public static Texture forestBackground;
+    public static Texture black;
     public static Texture caveBackground;
     public static Texture desertBackground;
-    public static Texture waterBackground;
     public static Texture dungeonBackground;
-    public static Texture towerBackground;
-    public static Texture killphraseBox;
-    public static Texture speechBubbleTexture;
-    public static Texture enemyTexture;
     public static Texture effectsTexture;
-    public static Texture stunStarsTexture;
+    public static Texture enemyTexture;
+    public static Texture forestBackground;
+    public static Texture killphraseBox;
+    public static Texture libraryBackground;
     public static Texture noiseTexture;
+    public static Texture speechBubbleTexture;
+    public static Texture stunStarsTexture;
+    public static Texture towerBackground;
+    public static Texture waterBackground;
     public static TextureRegion noiseRegionX;
     public static TextureRegion noiseRegionY;
     public static TextureRegion noiseRegionXY;
@@ -87,6 +88,7 @@ public class Assets {
         }
         background1 = new Texture("background1.png");
         libraryBackground = new Texture("fight-screen-library.png");
+        black = new Texture("black.png");
         forestBackground = new Texture("fight-screen-forest.png");
         caveBackground = new Texture("fight-screen-cave.png");
         desertBackground = new Texture("fight-screen-desert.png");

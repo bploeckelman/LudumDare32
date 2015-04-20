@@ -20,18 +20,17 @@ public class NarrativeParagraph {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public NarrativeParagraph(NarrativePhrase phrase, int width) {
+    public NarrativeParagraph(int width) {
 
         this.width = width;
         phrasesByLine.add(new ArrayList<NarrativePhrase>());
-        addPhrase(phrase);
 
     }
 
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public void addPhrase(NarrativePhrase phrase) {
+    public NarrativePhrase addPhrase(NarrativePhrase phrase) {
         ArrayList<NarrativePhrase> currentLine = phrasesByLine.get(phrasesByLine.size() - 1);
         int currentLinePhraseCount = currentLine.size();
         float currentLineWidth = currentLinePhraseCount == 0 ? 0 : getWidthOfLine(currentLine);
@@ -65,6 +64,7 @@ public class NarrativeParagraph {
 
                 if (newPhraseWidth > widthRemaining) {
 
+                    NarrativePhrase lastPhrase;
 //                    Gdx.app.error("NarrativeParagraph.addPhrase", "\t\t\t" + "overflow found! splitting");
 
                     // We've found the point of overflow
@@ -78,11 +78,11 @@ public class NarrativeParagraph {
                             // If there are words remaining, make a new phrase and add it.
                             if (pWords.length > 1) {
                                 String overflowText = Utils.joinStringArray(pWords, 1, pWords.length, " ");
-                                addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
+                                return addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
                             }
                         } else {
                             // Put this phrase on its own line
-                            addPhrase(phrase);
+                            return addPhrase(phrase);
                         }
 
                     } else {
@@ -90,21 +90,22 @@ public class NarrativeParagraph {
                         String fitText = Utils.joinStringArray(pWords, 0, wordIndex, " ");
                         String overflowText = Utils.joinStringArray(pWords, wordIndex, pWords.length, " ");
                         currentLine.add(new NarrativePhrase(pFont, fitText, pCPS));
-                        addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
+                        return addPhrase(new NarrativePhrase(pFont,overflowText,pCPS));
                     }
 
                     // Our work here is done.
-                    return;
                 }
             }
 
             // We shoudln't be here
             Gdx.app.error("NarrativeParagraph.addPhrase", "Phrase didn't fit, then did.");
             currentLine.add(phrase);
+            return phrase;
 
         } else {
             // The phrase will fit perfectly well.
             currentLine.add(phrase);
+            return phrase;
         }
     }
 
