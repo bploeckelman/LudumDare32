@@ -144,7 +144,8 @@ public class EnemyFactory {
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
                         SpellWord.Type.DARKNESS,
-                        SpellWord.Type.SANDSTORM
+                        SpellWord.Type.SANDSTORM,
+                        SpellWord.Type.SEASICKNESS
                 }
         ));
         killPhrases.put("WaterCube", new String[]{
@@ -168,6 +169,7 @@ public class EnemyFactory {
                         SpellWord.Type.QUIET,
                         SpellWord.Type.DARKNESS,
                         SpellWord.Type.SANDSTORM,
+                        SpellWord.Type.SEASICKNESS,
                         SpellWord.Type.CROSSEYED
                 }
         ));
@@ -192,6 +194,7 @@ public class EnemyFactory {
                         SpellWord.Type.QUIET,
                         SpellWord.Type.DARKNESS,
                         SpellWord.Type.SANDSTORM,
+                        SpellWord.Type.SEASICKNESS,
                         SpellWord.Type.CROSSEYED
                 }
         ));

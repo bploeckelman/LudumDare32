@@ -45,6 +45,9 @@ public class FightScreen extends ScreenAdapter {
     private static final float post_timeout = 6f;
     private static final float noise_scroll_speed_x = 0.5f;
     private static final float noise_scroll_speed_y = 0.2f;
+    private static final float seasick_rot_speed = 30f;
+    private static final float seasick_min_angle = -10f;
+    private static final float seasick_max_angle =  10f;
 
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
@@ -68,6 +71,10 @@ public class FightScreen extends ScreenAdapter {
 
 //    MutableFloat noiseFadeout; // TODO: if time, fade out noise on doNoise set to false
     public boolean doNoise = false;
+    public boolean seasick = false;
+    float seasickAngle = 0f;
+    boolean rollLeft = true;
+
     boolean doPost = false;
     float accum = 0f;
     float timerStateTime = 0f;
@@ -123,6 +130,11 @@ public class FightScreen extends ScreenAdapter {
             Assets.noiseRegionX.scroll(noise_scroll_speed_x * delta, 0);
             Assets.noiseRegionY.scroll(0, -noise_scroll_speed_y * delta);
             Assets.noiseRegionXY.scroll(noise_scroll_speed_x * delta, -noise_scroll_speed_y * delta);
+        }
+        if (seasick) {
+            if (rollLeft && seasickAngle < seasick_min_angle) rollLeft = false;
+            else if (!rollLeft && seasickAngle > seasick_max_angle) rollLeft = true;
+            seasickAngle += (rollLeft ? -1f : 1f) * seasick_rot_speed * delta;
         }
 
         GameInstance.tweens.update(delta);
@@ -313,7 +325,19 @@ public class FightScreen extends ScreenAdapter {
              * Render Stuff!
              */
             batch.setColor(backgroundColor);
-            batch.draw(Assets.forestBackground, -64, -64);
+            if (seasick) {
+                final float width = sceneCamera.viewportWidth + 128;
+                final float height = sceneCamera.viewportHeight + 128;
+                batch.draw(Assets.forestBackgroundRegion,
+                           -64, -64,
+                           width / 2f,
+                           height / 2f,
+                           width, height,
+                           1, 1,
+                           seasickAngle);
+            } else {
+                batch.draw(Assets.forestBackground, -64, -64);
+            }
 
             player.render(batch);
             enemy.render(batch);

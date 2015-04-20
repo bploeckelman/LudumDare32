@@ -30,6 +30,7 @@ public class Assets {
     public static TextureRegion noiseRegionX;
     public static TextureRegion noiseRegionY;
     public static TextureRegion noiseRegionXY;
+    public static TextureRegion forestBackgroundRegion;
     public static TextureRegion[][] enemyRegions;
     public static TextureRegion[][] effectsRegions;
     public static TextureRegion[][] stunStarsRegions;
@@ -84,6 +85,7 @@ public class Assets {
         noiseRegionX = new TextureRegion(noiseTexture);
         noiseRegionY = new TextureRegion(noiseTexture);
         noiseRegionXY = new TextureRegion(noiseTexture);
+        forestBackgroundRegion = new TextureRegion(forestBackground);
         enemyRegions = TextureRegion.split(enemyTexture, 24, 24);
         effectsRegions = TextureRegion.split(effectsTexture, 32, 32);
         stunStarsRegions = TextureRegion.split(stunStarsTexture, 24, 16);
