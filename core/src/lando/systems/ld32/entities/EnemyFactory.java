@@ -1,9 +1,9 @@
 package lando.systems.ld32.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld32.Assets;
+import lando.systems.ld32.spellwords.SpellWord;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,20 +18,40 @@ public class EnemyFactory {
         killPhrases = new HashMap<String, String[]>();
 
         bosses.put("Fubar", new Config(
-                Assets.defaultEnemyAnimation2,
-                3,
-                new String[]{"SMASH", "BLARGH", "GLOOP", "FOOLISH MORTAL", "PANCAKES"}));
+            Assets.defaultEnemyAnimation2,
+            3,
+            new String[]{
+                "SMASH",
+                "BLARGH",
+                "GLOOP",
+                "FOOL",
+                "PANCAKES"
+            },
+            new SpellWord.Type[]{
+                SpellWord.Type.DARKNESS
+            }
+        ));
 
         killPhrases.put("Fubar", new String[]{
-                "BACON PANCAKES",
-                "WORDS AND STUFF",
-                "I ATE IT ALL"
+            "BACON PANCAKES",
+            "WORDS AND STUFF",
+            "I ATE IT ALL"
         });
 
         bosses.put("Gozer", new Config(
             Assets.defaultEnemyAnimation,
             3,
-            new String[]{"ROAR", "BITE", "STINK", "TROUT SLAP", "YOUR MOM"}));
+            new String[]{
+                "ROAR",
+                "BITE",
+                "STINK",
+                "TROUT SLAP",
+                "YOUR MOM"
+            },
+            new SpellWord.Type[]{
+                SpellWord.Type.QUIET
+            }
+        ));
 
         killPhrases.put("Gozer", new String[]{
             "NOT MY MEATBALLS",
@@ -44,25 +64,32 @@ public class EnemyFactory {
         Animation animation;
         float attackDelay;
         String[] attackDictionary;
+        SpellWord.Type[] spellDictionary;
 
-        public Config(Animation animation, float attackDelay, String[] attackDictionary) {
+        public Config(
+            Animation animation,
+            float attackDelay,
+            String[] attackDictionary,
+            SpellWord.Type[] spellDictionary)
+        {
             this.attackDelay = attackDelay;
             this.animation = animation;
             this.attackDictionary = attackDictionary;
+            this.spellDictionary = spellDictionary;
         }
     }
 
-    private static Enemy createEnemy(BitmapFont font, Config config, String killPhrase) {
-        return new Enemy(font, config.animation, config.attackDelay, config.attackDictionary, killPhrase);
-    }
+    private static Enemy createEnemy(Config config, String killPhrase) {
+        return new Enemy(config.animation, config.attackDelay, config.attackDictionary, config.spellDictionary, killPhrase);
+}
 
-    public static Enemy getBoss(BitmapFont font, int level) {
+    public static Enemy getBoss(int level) {
         if (MathUtils.randomBoolean()) {
             String[] phrases = killPhrases.get("Gozer");
-            return createEnemy(font, bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length - 1)]);
+            return createEnemy(bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length - 1)]);
         } else {
             String[] phrases = killPhrases.get("Fubar");
-            return createEnemy(font, bosses.get("Fubar"), phrases[MathUtils.random(0, phrases.length - 1)]);
+            return createEnemy(bosses.get("Fubar"), phrases[MathUtils.random(0, phrases.length - 1)]);
         }
     }
 }

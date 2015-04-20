@@ -56,8 +56,8 @@ public class KillPhrase {
     Array<Explode> explodes;
     Array<Xout> xouts;
 
-    public KillPhrase(String phrase, BitmapFont font) {
-        this.font = font;
+    public KillPhrase(String phrase) {
+        this.font = Assets.font16;
         this.typed = "";
         this.fullPhrase = phrase.toUpperCase();
         this.phrase = new String[phrase.length()];

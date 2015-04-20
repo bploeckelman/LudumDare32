@@ -15,10 +15,11 @@ public class AttackWord {
     static final float default_velocity = -120f;
     static final float flash_duration   = 0.15f;
     static final float move_delay_time  = 4.5f * flash_duration;
-    static final float small_scale      = 0.8f;
-    static final float normal_scale     = 1.5f;
     static final Color dark_font_color  = new Color(0.1f, 0.1f, 0.1f, 0.2f);
     static final Color dark_bubble_color= new Color(0.3f, 0.3f, 0.3f, 0.3f);
+
+    static BitmapFont smallFont = null;
+    static BitmapFont normalFont = null;
 
     public static final float flyoff_duration = .8f;
     public static boolean smallWords = false;
@@ -37,24 +38,22 @@ public class AttackWord {
     public boolean    disabled;
     public Vector2    velocity;
     public Vector2    origin;
-    public BitmapFont font;
     public Rectangle  bounds;
     public float dangerLevel = 0f;
 
-    public AttackWord(String word, BitmapFont font) {
+    public AttackWord(String word) {
         this.word = word.toUpperCase();
         this.letters = new String[word.length()];
         for (int i = 0; i < this.word.length(); ++i) {
             letters[i] = "" + this.word.charAt(i);
         }
         this.typed = "";
-        this.font = font;
 
-        font.setScale(small_scale);
-        this.smallTextBounds = new TextBounds(font.getBounds(this.word));
-        font.setScale(normal_scale);
-        this.normalTextBounds = new TextBounds(font.getBounds(this.word));
-        font.setScale(1f);
+        if (smallFont == null) smallFont = Assets.font8;
+        if (normalFont == null) normalFont = Assets.font16;
+
+        this.smallTextBounds = new TextBounds(smallFont.getBounds(this.word));
+        this.normalTextBounds = new TextBounds(normalFont.getBounds(this.word));
 
         this.bounds = new Rectangle(0, 0, normalTextBounds.width + 2 * bubble_margin, normalTextBounds.height + 2 * bubble_margin);
         this.velocity = new Vector2(default_velocity, 0);
@@ -126,24 +125,23 @@ public class AttackWord {
 
         float textX, textY;
         if (smallWords) {
-            font.setScale(small_scale);
             textX = bounds.x + bounds.width  / 2f - smallTextBounds.width  / 2f;
             textY = bounds.y + bounds.height / 2f + smallTextBounds.height / 2f;
         } else {
-            font.setScale(normal_scale);
             textX = bounds.x + bounds.width  / 2f - normalTextBounds.width  / 2f;
             textY = bounds.y + bounds.height / 2f + normalTextBounds.height / 2f;
         }
 
+        BitmapFont font = smallWords ? smallFont : normalFont;
+
         if (darkMode) font.setColor(dark_font_color);
+        else          font.setColor(1, 1, 1, 1);
         font.draw(batch, word, textX, textY);
-        if (darkMode) font.setColor(1, 1, 1, 1);
+        if (darkMode) font.setColor(0, 0, 0, 1);
 
         font.setColor(Color.CYAN);
         font.draw(batch, typed, textX, textY);
         font.setColor(Color.WHITE);
-
-        font.setScale(1);
     }
 
 }

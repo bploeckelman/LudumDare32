@@ -1,13 +1,12 @@
 package lando.systems.ld32.spellwords;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.screens.FightScreen;
 
 public class Darkness extends SpellWord {
 
-    public Darkness(BitmapFont font) {
-        super("DARKNESS", font);
+    public Darkness() {
+        super("DARKNESS");
     }
 
     @Override
