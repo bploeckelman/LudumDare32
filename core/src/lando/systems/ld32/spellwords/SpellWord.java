@@ -1,7 +1,6 @@
 package lando.systems.ld32.spellwords;
 
 import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.equations.Expo;
 import aurelienribon.tweenengine.equations.Sine;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Input;
@@ -85,7 +84,7 @@ public abstract class SpellWord {
         final float x0 = bounds.x;
         final float x1 = Constants.win_width / 2f;
         final float end_offset = (x1 - x0);
-        offset_increment = end_offset / word.length();
+        offset_increment = end_offset / (word.length() - 1);
     }
 
     public abstract void applySpell(FightScreen fightScreen);
