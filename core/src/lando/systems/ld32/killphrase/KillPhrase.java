@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.equations.Back;
 import aurelienribon.tweenengine.equations.Bounce;
 import aurelienribon.tweenengine.equations.Cubic;
 import aurelienribon.tweenengine.primitives.MutableFloat;
@@ -20,6 +21,8 @@ import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.effects.Explode;
+import lando.systems.ld32.effects.Xout;
+import lando.systems.ld32.tweens.Vector2Accessor;
 
 public class KillPhrase {
     private final String space = " ";
@@ -50,6 +53,7 @@ public class KillPhrase {
     private BitmapFont font;
 
     Array<Explode> explodes;
+    Array<Xout> xouts;
 
     public KillPhrase(String phrase, BitmapFont font) {
         this.font = font;
@@ -63,6 +67,7 @@ public class KillPhrase {
         boxOrigins = new Vector2[this.phrase.length];
         yOffsets = new MutableFloat[this.phrase.length];
         explodes = new Array<Explode>();
+        xouts = new Array<Xout>();
 
         float width = 0;
         for(int i=0; i<this.phrase.length; i++) {
@@ -115,10 +120,10 @@ public class KillPhrase {
         for(int i=phrase.length-1; i>=0; i--) {
             if(enabled[i]) {
                 enabled[i] = false;
-                visible[i] = false;
                 if(phrase[i].equals(space)) {
                     continue;
                 }
+                tweenXout(i);
                 return temp.set(boxOrigins[i].x + boxSize / 2f, boxOrigins[i].y + boxSize / 2f).cpy();
             }
         }
@@ -158,6 +163,14 @@ public class KillPhrase {
                 explodes.removeIndex(i);
             }
         }
+        for (int i = xouts.size - 1; i >= 0; --i) {
+            final Xout xout = xouts.get(i);
+            xout.update(delta);
+            if (!xout.alive) {
+                Xout.xoutPool.free(xout);
+                xouts.removeIndex(i);
+            }
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -187,6 +200,9 @@ public class KillPhrase {
 
         for (Explode explode : explodes) {
             explode.render(batch);
+        }
+        for (Xout xout : xouts) {
+            xout.render(batch);
         }
     }
 
@@ -244,12 +260,36 @@ public class KillPhrase {
                     doExplode(boxOrigins[letter], 0f);
                     visible[letter] = true;
                     if (letter != phrase.length - 1) {
-                        Tween.to(yOffsets[letter], -1, .2f)
-                            .target(boxSize / 2)
-                            .ease(Cubic.OUT)
-                            .repeatYoyo(1, 0f)
+                        Tween.to(boxOrigins[letter], Vector2Accessor.X, .5f)
+                            .waypoint(boxOrigins[letter].x - boxSpacing)
+                            .waypoint(boxOrigins[letter].x + boxSpacing)
+                            .target(boxOrigins[letter].x)
+                            .ease(Back.INOUT)
                             .start(GameInstance.tweens);
                     }
+                }
+            }).start(GameInstance.tweens);
+    }
+
+    private void doXout(Vector2 origin, float scale) {
+        float x = origin.x + 4 + (boxSize / 2f);
+        float y = origin.y + boxSize / 2f;
+        Xout xout = Xout.xoutPool.obtain();
+        xout.init(x, y);
+        xouts.add(xout);
+    }
+    public void tweenXout(final int letter) {
+        Tween.to(new MutableFloat(0f), -1, (AttackWord.flyoff_duration/2))
+            .setCallback(new TweenCallback() {
+                @Override
+                public void onEvent(int type, BaseTween<?> source) {
+                    doXout(boxOrigins[letter], 0f);
+                    visible[letter] = false;
+                    Tween.to(yOffsets[letter], -1, .2f)
+                        .target(boxSize / 2)
+                        .ease(Cubic.OUT)
+                        .repeatYoyo(1, 0f)
+                        .start(GameInstance.tweens);
                 }
             }).start(GameInstance.tweens);
     }

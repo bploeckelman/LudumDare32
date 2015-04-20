@@ -3,6 +3,7 @@ package lando.systems.ld32.screens;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.equations.Quint;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -179,9 +180,9 @@ public class FightScreen extends ScreenAdapter {
                     attackWords.removeValue(word, true);
                 } else {
                     word.velocity.set(0, 0);
-                    Tween.to(word.bounds, RectangleAccessor.XYWH, AttackWord.flyoff_duration)
+                    Tween.to(word.bounds, RectangleAccessor.XYWH, AttackWord.flyoff_duration/2)
                          .target(targetLetter.x, targetLetter.y, 0, 0)
-                         .ease(Quint.OUT)
+                         .ease(Linear.INOUT)
                          .setCallback(new TweenCallback() {
                              @Override
                              public void onEvent(int i, BaseTween<?> baseTween) {

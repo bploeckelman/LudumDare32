@@ -29,6 +29,7 @@ public class GameInstance extends Game {
         Assets.load();
 
         Tween.setCombinedAttributesLimit(4);
+        Tween.setWaypointsLimit(2);
         Tween.registerAccessor(Color.class, new ColorAccessor());
         Tween.registerAccessor(Vector2.class, new Vector2Accessor());
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());

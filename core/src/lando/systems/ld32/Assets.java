@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lando.systems.ld32.effects.Explode;
 import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.effects.StunStars;
+import lando.systems.ld32.effects.Xout;
 
 public class Assets {
 
@@ -28,6 +29,7 @@ public class Assets {
     public static Animation puffAnimation;
     public static Animation stunStarsAnimation;
     public static Animation explodeAnimation;
+    public static Animation xoutAnimation;
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
@@ -68,6 +70,10 @@ public class Assets {
             effectsRegions[0][1],
             effectsRegions[10][0],
             effectsRegions[10][1]);
+        xoutAnimation = new Animation(
+            Xout.xout_time,
+            effectsRegions[1][2],
+            effectsRegions[1][3]);
 
 
 
