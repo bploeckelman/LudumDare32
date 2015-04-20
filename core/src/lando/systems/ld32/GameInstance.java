@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import lando.systems.ld32.screens.FightScreen;
 import lando.systems.ld32.screens.GameOverScreen;
+import lando.systems.ld32.screens.GameScreen;
 import lando.systems.ld32.story.StoryManager;
 import lando.systems.ld32.tweens.ColorAccessor;
 import lando.systems.ld32.tweens.RectangleAccessor;
@@ -39,12 +40,12 @@ public class GameInstance extends Game {
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());
         Tween.registerAccessor(Rectangle.class, new RectangleAccessor());
 
-//        screens.put(Constants.test_screen, new TestScreen(this));
+        screens.put(Constants.game_screen, new GameScreen(this));
         screens.put(Constants.fight_screen, new FightScreen(this));
         screens.put(Constants.game_over_screen, new GameOverScreen(this));
-        setScreen(screens.get(Constants.fight_screen));
+        setScreen(screens.get(Constants.game_screen));
+//        setScreen(screens.get(Constants.fight_screen));
 //        setScreen(screens.get(Constants.game_over_screen));
-
     }
 
     @Override

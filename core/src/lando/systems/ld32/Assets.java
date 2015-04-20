@@ -17,6 +17,7 @@ public class Assets {
     public static BitmapFont font32;
 
     public static ShaderProgram postShader;
+    public static Texture overworld;
 
     public static Texture[] timerTextures;
     public static Texture background1;
@@ -80,6 +81,7 @@ public class Assets {
         postShader = new ShaderProgram(
                 Gdx.files.internal("shaders/default.vert"),
                 Gdx.files.internal("shaders/post.frag"));
+        overworld = new Texture("overworld.png");
 
 
         timerTextures = new Texture[6];
