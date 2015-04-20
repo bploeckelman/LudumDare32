@@ -45,7 +45,6 @@ public class FightScreen extends ScreenAdapter {
     private static final float stagger_time = 4f;
     private static final float post_timeout = 6f;
 
-    BitmapFont         font;
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
     TextureRegion      sceneRegion;
@@ -71,8 +70,6 @@ public class FightScreen extends ScreenAdapter {
     public FightScreen(GameInstance game) {
         this.game = game;
 
-        font = new BitmapFont();
-        font.setMarkupEnabled(true);
         backgroundColor = new Color(1, 1, 1, 1);
         sceneFBO = new FrameBuffer(Pixmap.Format.RGBA8888, Constants.win_width, Constants.win_height, false);
         sceneRegion = new TextureRegion(sceneFBO.getColorBufferTexture());
@@ -86,10 +83,9 @@ public class FightScreen extends ScreenAdapter {
         screenCamera.setToOrtho(false, Constants.win_width, Constants.win_height);
         screenCamera.update();
 
-        font.setColor(0, 0, 0, 1);
-        enemy = EnemyFactory.getBoss(font, 1);
+        enemy = EnemyFactory.getBoss(1);
         attackWords = new Array<AttackWord>();
-        killPhrase = new KillPhrase(enemy.killPhrase, font);
+        killPhrase = new KillPhrase(enemy.killPhrase);
         player = new Player();
 
         keyboardInputAdapter = new KeyboardInputAdapter(attackWords, killPhrase);
@@ -176,6 +172,7 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
+        // Handle attack word completion
         if (attackWords.size > 0) {
             final AttackWord word = attackWords.first();
             if (word.isComplete() && !word.disabled) {
@@ -249,16 +246,25 @@ public class FightScreen extends ScreenAdapter {
             }
         }
 
+        // Enemy destroyed
         if (killPhrase.isTyped()) {
             // TODO: perform a fancy fanfare and revert back to overworld
             shake.shake(5f);
-            enemy = EnemyFactory.getBoss(font, 1);
-            killPhrase = new KillPhrase(enemy.killPhrase, font);
+            stunStars.alive = false;
+
+            enemy = EnemyFactory.getBoss(1);
+            killPhrase = new KillPhrase(enemy.killPhrase);
+
+            spellWord.removeSpell(this);
+            spellWord = null;
+
+            keyboardInputAdapter.spellWord = null;
             keyboardInputAdapter.killPhrase = killPhrase;
-            tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
+
             doPost = true;
             accum = 0f;
-            stunStars.alive = false;
+
+            tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
         }
 
         if(stunStars.alive) {

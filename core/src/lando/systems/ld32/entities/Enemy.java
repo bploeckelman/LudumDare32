@@ -1,14 +1,11 @@
 package lando.systems.ld32.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.attackwords.AttackWord;
-import lando.systems.ld32.spellwords.Darkness;
-import lando.systems.ld32.spellwords.Silence;
 import lando.systems.ld32.spellwords.SpellWord;
 
 public class Enemy extends Entity {
@@ -16,21 +13,18 @@ public class Enemy extends Entity {
     float attackDelay;
     float spellTimer;
     float spellDelay;
-    BitmapFont font;
     public float scale = 2.5f;
     String[] attackDictionary;
     SpellWord.Type[] spellDictionary;
     public String killPhrase;
 
     public Enemy(
-        BitmapFont font,
         Animation animation,
         float attackDelay,
         String[] attackDictionary,
         SpellWord.Type[] spellDictionary,
         String killPhrase)
     {
-        this.font = font;
         this.animation = animation;
         this.attackDelay = attackDelay;
         this.attackDictionary = attackDictionary;
@@ -49,8 +43,7 @@ public class Enemy extends Entity {
     public AttackWord generateAttack() {
         if(attackTimer >= attackDelay) {
             attackTimer = 0;
-            AttackWord attackWord = new AttackWord(
-                attackDictionary[MathUtils.random(0, attackDictionary.length-1)], font);
+            AttackWord attackWord = new AttackWord(attackDictionary[MathUtils.random(0, attackDictionary.length-1)]);
             float x = position.x - attackWord.bounds.width - 5f;
             float y = position.y + keyFrame.getRegionHeight() * scale - 5f;
             attackWord.origin.set(x, y);
@@ -63,8 +56,7 @@ public class Enemy extends Entity {
     public SpellWord generateSpell() {
         SpellWord spellWord = null;
         if (spellTimer > spellDelay) {
-            spellWord = SpellWord.create(
-                spellDictionary[MathUtils.random(0, spellDictionary.length-1)].num, font);
+            spellWord = SpellWord.create(spellDictionary[MathUtils.random(0, spellDictionary.length-1)].num);
         }
         return spellWord;
     }

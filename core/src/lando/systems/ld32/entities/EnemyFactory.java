@@ -1,10 +1,8 @@
 package lando.systems.ld32.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld32.Assets;
-import lando.systems.ld32.spellwords.Silence;
 import lando.systems.ld32.spellwords.SpellWord;
 
 import java.util.HashMap;
@@ -81,17 +79,17 @@ public class EnemyFactory {
         }
     }
 
-    private static Enemy createEnemy(BitmapFont font, Config config, String killPhrase) {
-        return new Enemy(font, config.animation, config.attackDelay, config.attackDictionary, config.spellDictionary, killPhrase);
+    private static Enemy createEnemy(Config config, String killPhrase) {
+        return new Enemy(config.animation, config.attackDelay, config.attackDictionary, config.spellDictionary, killPhrase);
 }
 
-    public static Enemy getBoss(BitmapFont font, int level) {
+    public static Enemy getBoss(int level) {
         if (MathUtils.randomBoolean()) {
             String[] phrases = killPhrases.get("Gozer");
-            return createEnemy(font, bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length - 1)]);
+            return createEnemy(bosses.get("Gozer"), phrases[MathUtils.random(0, phrases.length - 1)]);
         } else {
             String[] phrases = killPhrases.get("Fubar");
-            return createEnemy(font, bosses.get("Fubar"), phrases[MathUtils.random(0, phrases.length - 1)]);
+            return createEnemy(bosses.get("Fubar"), phrases[MathUtils.random(0, phrases.length - 1)]);
         }
     }
 }

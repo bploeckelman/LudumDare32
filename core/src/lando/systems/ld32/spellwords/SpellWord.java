@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.killphrase.KillPhrase;
 import lando.systems.ld32.screens.FightScreen;
@@ -21,13 +22,13 @@ public abstract class SpellWord {
         }
     }
 
-    public static SpellWord create(String spellName, BitmapFont font) {
-        return create(Type.valueOf(spellName).num, font);
+    public static SpellWord create(String spellName) {
+        return create(Type.valueOf(spellName).num);
     }
-    public static SpellWord create(int spellNum, BitmapFont font) {
+    public static SpellWord create(int spellNum) {
         switch (spellNum) {
-            case 1: return new Darkness(font);
-            case 2: return new Silence(font);
+            case 1: return new Darkness();
+            case 2: return new Silence();
         }
 
         return null;
@@ -48,14 +49,14 @@ public abstract class SpellWord {
     String     typed;
     String[]   letters;
 
-    public SpellWord(String word, BitmapFont font) {
+    public SpellWord(String word) {
         this.word = word.toUpperCase();
         String temp = "";
         for (int i = this.word.length() - 1; i >= 0; --i) {
             temp += this.word.charAt(i);
         }
         this.reverseWord = temp;
-        this.font = font;
+        this.font = Assets.font16;
         this.typed = "";
         this.letters = new String[word.length()];
         for (int i = 0; i < this.word.length(); ++i) {
@@ -73,6 +74,7 @@ public abstract class SpellWord {
     }
 
     public abstract void applySpell(FightScreen fightScreen);
+
     public abstract void removeSpell(FightScreen fightScreen);
 
     public void render(SpriteBatch batch) {

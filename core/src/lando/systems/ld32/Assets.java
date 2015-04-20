@@ -2,10 +2,7 @@ package lando.systems.ld32;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lando.systems.ld32.effects.Explode;
@@ -17,6 +14,10 @@ public class Assets {
 
     public static SpriteBatch   batch;
     public static ShapeRenderer shapes;
+
+    public static BitmapFont font8;
+    public static BitmapFont font16;
+    public static BitmapFont font32;
 
     public static ShaderProgram postShader;
 
@@ -42,6 +43,13 @@ public class Assets {
     public static void load() {
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();
+
+        font8 = new BitmapFont(Gdx.files.internal("fonts/monaco8.fnt"));
+        font8.setMarkupEnabled(true);
+        font16 = new BitmapFont(Gdx.files.internal("fonts/monaco16.fnt"));
+        font16.setMarkupEnabled(true);
+        font32 = new BitmapFont(Gdx.files.internal("fonts/monaco32.fnt"));
+        font32.setMarkupEnabled(true);
 
         postShader = new ShaderProgram(
                 Gdx.files.internal("shaders/default.vert"),
@@ -108,6 +116,9 @@ public class Assets {
         enemyTexture.dispose();
         effectsTexture.dispose();
         postShader.dispose();
+        font32.dispose();
+        font16.dispose();
+        font8.dispose();
     }
 
 }
