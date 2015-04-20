@@ -258,6 +258,7 @@ public class FightScreen extends ScreenAdapter {
             tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
             doPost = true;
             accum = 0f;
+            stunStars.alive = false;
         }
 
         if(stunStars.alive) {
