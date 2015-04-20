@@ -169,6 +169,7 @@ public class FightScreen extends ScreenAdapter {
             spellWord = null;
             keyboardInputAdapter.spellWord = null;
             enemy.setSpellTimer(0f);
+            shake.shake(1f);
         }
 
         for (AttackWord word : attackWords) {

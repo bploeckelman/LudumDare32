@@ -164,7 +164,8 @@ public class EnemyFactory {
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
-                        SpellWord.Type.DARKNESS
+                        SpellWord.Type.DARKNESS,
+                        SpellWord.Type.CROSSEYED
                 }
         ));
         killPhrases.put("Beholder", new String[]{

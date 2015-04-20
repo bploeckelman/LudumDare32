@@ -18,7 +18,8 @@ import lando.systems.ld32.screens.FightScreen;
 public abstract class SpellWord {
     public static enum Type {
         DARKNESS(1),
-        QUIET(2);
+        QUIET(2),
+        CROSSEYED(5);
 
         public int num;
         Type(int i) {
@@ -33,6 +34,7 @@ public abstract class SpellWord {
         switch (spellNum) {
             case 1: return new Darkness();
             case 2: return new Quiet();
+            case 5: return new Crosseyed();
         }
 
         return null;

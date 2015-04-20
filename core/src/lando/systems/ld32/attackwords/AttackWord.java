@@ -15,6 +15,8 @@ public class AttackWord {
     static final float default_velocity = -120f;
     static final float flash_duration   = 0.15f;
     static final float move_delay_time  = 4.5f * flash_duration;
+    static final float crosseye_spread_x = 2.25f;
+    static final float crosseye_spread_y = 1.5f;
     static final Color dark_font_color  = new Color(0.1f, 0.1f, 0.1f, 0.2f);
     static final Color dark_bubble_color= new Color(0.3f, 0.3f, 0.3f, 0.3f);
 
@@ -24,6 +26,7 @@ public class AttackWord {
     public static final float flyoff_duration = .8f;
     public static boolean smallWords = false;
     public static boolean darkMode = false;
+    public static boolean crosseyeMode = false;
 
     final String     word;
     final String     lowerWord;
@@ -126,8 +129,15 @@ public class AttackWord {
         if (!visible) return;
 
         if (darkMode) batch.setColor(dark_bubble_color);
-        else          batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, 1);
-        Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+        else {
+            batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, crosseyeMode ? 0.3f : 1f);
+        }
+        if (crosseyeMode) {
+            Assets.speechBubble.draw(batch, bounds.x - crosseye_spread_x, bounds.y + crosseye_spread_y, bounds.width, bounds.height);
+            Assets.speechBubble.draw(batch, bounds.x + crosseye_spread_x, bounds.y - crosseye_spread_y, bounds.width, bounds.height);
+        } else {
+            Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
+        }
         batch.setColor(1, 1, 1, 1);
 
         if (disabled) return;
@@ -144,12 +154,24 @@ public class AttackWord {
         BitmapFont font = smallWords ? smallFont : normalFont;
 
         if (darkMode) font.setColor(dark_font_color);
-        else          font.setColor(1, 1, 1, 1);
-        font.draw(batch, lowerWord, textX, textY);
+        else {
+            font.setColor(1, 1, 1, crosseyeMode ? 0.9f : 1f);
+        }
+        if (crosseyeMode) {
+            font.draw(batch, lowerWord, textX - crosseye_spread_x, textY + crosseye_spread_y);
+            font.draw(batch, lowerWord, textX + crosseye_spread_x, textY - crosseye_spread_y);
+        } else {
+            font.draw(batch, lowerWord, textX, textY);
+        }
         if (darkMode) font.setColor(0, 0, 0, 1);
 
         font.setColor(Color.CYAN);
-        font.draw(batch, typed, textX, textY);
+        if (crosseyeMode) {
+            font.draw(batch, typed, textX - crosseye_spread_x, textY + crosseye_spread_y);
+            font.draw(batch, typed, textX + crosseye_spread_x, textY - crosseye_spread_y);
+        } else {
+            font.draw(batch, typed, textX, textY);
+        }
         font.setColor(Color.WHITE);
     }
 
