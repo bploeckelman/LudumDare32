@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.Statistics;
 import lando.systems.ld32.Utils.Callback;
 import lando.systems.ld32.Utils.Shake;
 import lando.systems.ld32.attackwords.AttackWord;
@@ -119,6 +120,9 @@ public class FightScreen extends ScreenAdapter {
 
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
+
+        Statistics.playTime += delta;
+
         if (doPost) {
             accum += delta * 2f;
             if (accum > post_timeout) {
@@ -186,6 +190,7 @@ public class FightScreen extends ScreenAdapter {
 
         if (spellWord != null && spellWord.isComplete()) {
             counterSpell.init(screenCamera.viewportWidth / 2f, spellWord.bounds.y, 5f);
+            Statistics.numSpellsCountered++;
             spellWord.removeSpell(this);
             spellWord = null;
             keyboardInputAdapter.spellWord = null;
@@ -206,6 +211,7 @@ public class FightScreen extends ScreenAdapter {
             if (word.isComplete() && !word.disabled) {
                 word.disabled = true;
                 doPuff(word.bounds, 2f);
+                Statistics.numWordsDefended++;
 
                 Vector2 targetLetter = killPhrase.enableLetter(new Callback() {
                     @Override
@@ -233,6 +239,7 @@ public class FightScreen extends ScreenAdapter {
                     staggerTimer = stagger_time;
                     Assets.timerAnimation.setFrameDuration(stagger_time / Assets.timerAnimation.getKeyFrames().length);
                     keyboardInputAdapter.staggerWindow = true;
+                    Statistics.numStaggers++;
 
                     for (AttackWord attackWord : attackWords) {
                         doPuff(attackWord.bounds, 1.5f);
@@ -255,6 +262,7 @@ public class FightScreen extends ScreenAdapter {
                 word.disabled = true;
                 doPuff(word.bounds, 2f);
                 shake.shake(.5f);
+                Statistics.numWordsHit++;
 
                 Vector2 targetLetter = killPhrase.disableLetter();
                 if (targetLetter == null) {
@@ -281,6 +289,7 @@ public class FightScreen extends ScreenAdapter {
             shake.shake(5f);
             stunStars.alive = false;
             counterSpell.alive = false;
+            Statistics.numFearsUncovered++;
 
             enemy = EnemyFactory.getBoss(1);
             killPhrase = new KillPhrase(enemy.killPhrase);

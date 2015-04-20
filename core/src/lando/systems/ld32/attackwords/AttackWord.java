@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Assets;
+import lando.systems.ld32.Statistics;
 
 public class AttackWord {
 
@@ -86,6 +87,7 @@ public class AttackWord {
         if (ventriloquist) {
             accel.add(0, -60);
         }
+        Statistics.numAttackWordsFired++;
         return this;
     }
 
@@ -107,6 +109,7 @@ public class AttackWord {
         int letter = Input.Keys.valueOf(letters[i]);
         if (keycode == letter) {
             typed += lowercase[i];
+            Statistics.numLettersTyped++;
         }
     }
 

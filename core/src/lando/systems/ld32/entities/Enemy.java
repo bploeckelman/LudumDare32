@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Constants;
+import lando.systems.ld32.Statistics;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.spellwords.SpellWord;
 import lando.systems.ld32.spellwords.Ventriloquism;
@@ -64,6 +65,9 @@ public class Enemy extends Entity {
         SpellWord spellWord = null;
         if (spellTimer > spellDelay) {
             spellWord = SpellWord.create(spellDictionary[MathUtils.random(0, spellDictionary.length-1)].num);
+        }
+        if (spellWord != null) {
+            Statistics.numSpellsCast++;
         }
         return spellWord;
     }

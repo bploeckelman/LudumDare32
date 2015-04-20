@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.Statistics;
 import lando.systems.ld32.Utils.Callback;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.effects.Explode;
@@ -227,6 +228,7 @@ public class KillPhrase {
         int letter = Input.Keys.valueOf(phrase[i]);
         if (keycode == letter) {
             typed += phrase[i];
+            Statistics.numLettersTyped++;
         }
     }
 

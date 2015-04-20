@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.Statistics;
 import lando.systems.ld32.killphrase.KillPhrase;
 import lando.systems.ld32.screens.FightScreen;
 
@@ -133,6 +134,8 @@ public abstract class SpellWord {
         int letter = Input.Keys.valueOf(letters[lastIndex - i]);
         if (keycode == letter) {
             typed += letters[lastIndex - i];
+            Statistics.numLettersTyped++;
+
             final float target = offset.floatValue() + offset_increment;
             Tween.to(offset, -1, 0.2f)
                  .target(target)

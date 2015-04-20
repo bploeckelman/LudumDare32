@@ -10,4 +10,5 @@ public class Constants {
     public static final String test_screen = "test_screen";
     public static final String game_screen = "game_screen";
     public static final String fight_screen = "fight_screen";
+    public static final String game_over_screen = "game_over_screen";
 }
