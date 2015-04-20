@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -42,12 +43,14 @@ public class FightScreen extends ScreenAdapter {
 
     // TODO: set relative to kill phrase length or enemy strength?
     private static final float stagger_time = 4f;
+    private static final float post_timeout = 6f;
 
     BitmapFont         font;
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
     TextureRegion      sceneRegion;
     OrthographicCamera sceneCamera;
+    OrthographicCamera screenCamera;
     Shake shake;
 
     Enemy             enemy;
@@ -62,6 +65,9 @@ public class FightScreen extends ScreenAdapter {
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
 
+    boolean doPost = false;
+    float accum = 0f;
+
     public FightScreen(GameInstance game) {
         this.game = game;
 
@@ -75,6 +81,10 @@ public class FightScreen extends ScreenAdapter {
         sceneCamera.setToOrtho(false, sceneFBO.getWidth(), sceneFBO.getHeight());
         sceneCamera.update();
         shake = new Shake();
+
+        screenCamera = new OrthographicCamera();
+        screenCamera.setToOrtho(false, Constants.win_width, Constants.win_height);
+        screenCamera.update();
 
         font.setColor(0, 0, 0, 1);
         enemy = EnemyFactory.getBoss(font, 1);
@@ -100,6 +110,13 @@ public class FightScreen extends ScreenAdapter {
 
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
+        if (doPost) {
+            accum += delta * 2f;
+            if (accum > post_timeout) {
+                accum = 0f;
+                doPost = false;
+            }
+        }
 
         GameInstance.tweens.update(delta);
         shake.update(delta, sceneCamera, sceneCamera.viewportWidth/2, sceneCamera.viewportHeight/2);
@@ -233,6 +250,8 @@ public class FightScreen extends ScreenAdapter {
             killPhrase = new KillPhrase(enemy.killPhrase, font);
             keyboardInputAdapter.killPhrase = killPhrase;
             tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
+            doPost = true;
+            accum = 0f;
         }
 
         if(stunStars.alive) {
@@ -285,10 +304,22 @@ public class FightScreen extends ScreenAdapter {
         sceneFBO.end();
     }
 
+
     private void renderScreen(SpriteBatch batch) {
+        final ShaderProgram postShader = doPost ? Assets.postShader : null;
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.setProjectionMatrix(screenCamera.combined);
+        batch.setShader(postShader);
         batch.begin();
+        if (doPost) {
+            Assets.postShader.setUniformf("u_time", accum);
+            Assets.postShader.setUniformf("u_resolution", screenCamera.viewportWidth, screenCamera.viewportHeight);
+            Assets.postShader.setUniformf("u_screenPos",
+                                          screenCamera.viewportWidth / 2f,
+                                          screenCamera.viewportHeight / 2f);
+        }
         batch.draw(sceneRegion, 0, 0);
         batch.end();
     }

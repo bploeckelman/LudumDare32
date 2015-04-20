@@ -1,10 +1,12 @@
 package lando.systems.ld32;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lando.systems.ld32.effects.Explode;
 import lando.systems.ld32.effects.Puff;
@@ -13,8 +15,11 @@ import lando.systems.ld32.effects.Xout;
 
 public class Assets {
 
-    public static SpriteBatch batch;
+    public static SpriteBatch   batch;
     public static ShapeRenderer shapes;
+
+    public static ShaderProgram postShader;
+
     public static Texture background1;
     public static Texture killphraseBox;
     public static Texture speechBubbleTexture;
@@ -37,6 +42,10 @@ public class Assets {
     public static void load() {
         batch = new SpriteBatch();
         shapes = new ShapeRenderer();
+
+        postShader = new ShaderProgram(
+                Gdx.files.internal("shaders/default.vert"),
+                Gdx.files.internal("shaders/post.frag"));
 
         background1 = new Texture("background1.png");
         killphraseBox = new Texture("killphrase-box.png");
@@ -98,6 +107,7 @@ public class Assets {
         speechBubbleTexture.dispose();
         enemyTexture.dispose();
         effectsTexture.dispose();
+        postShader.dispose();
     }
 
 }
