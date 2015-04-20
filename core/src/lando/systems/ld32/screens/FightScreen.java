@@ -64,6 +64,7 @@ public class FightScreen extends ScreenAdapter {
 
     boolean doPost = false;
     float accum = 0f;
+    float timerStateTime = 0f;
 
     public FightScreen(GameInstance game) {
         this.game = game;
@@ -133,11 +134,14 @@ public class FightScreen extends ScreenAdapter {
                 tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate);
                 killPhrase.tweenUp();
                 shake.shake(.33f);
+                timerStateTime = 0f;
             }
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
             stunStars.alive = false;
             enemy.paused = false;
+        } else {
+            timerStateTime += delta;
         }
 
         enemy.update(delta);
@@ -311,6 +315,9 @@ public class FightScreen extends ScreenAdapter {
             batch.setColor(Color.WHITE);
 
             killPhrase.render(batch);
+            if (staggerTimer > 0f) {
+                batch.draw(Assets.timerAnimation.getKeyFrame(timerStateTime), Constants.win_width / 2f - 32, Constants.win_height / 2f - 32);
+            }
 
             batch.end();
         }

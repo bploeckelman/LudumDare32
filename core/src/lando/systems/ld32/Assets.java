@@ -9,6 +9,7 @@ import lando.systems.ld32.effects.Explode;
 import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.effects.StunStars;
 import lando.systems.ld32.effects.Xout;
+import lando.systems.ld32.screens.FightScreen;
 
 public class Assets {
 
@@ -21,6 +22,7 @@ public class Assets {
 
     public static ShaderProgram postShader;
 
+    public static Texture[] timerTextures;
     public static Texture background1;
     public static Texture forestBackground;
     public static Texture killphraseBox;
@@ -33,6 +35,7 @@ public class Assets {
     public static TextureRegion[][] stunStarsRegions;
     public static NinePatch speechBubble;
 
+    public static Animation timerAnimation;
     public static Animation puffAnimation;
     public static Animation stunStarsAnimation;
     public static Animation explodeAnimation;
@@ -63,6 +66,11 @@ public class Assets {
                 Gdx.files.internal("shaders/default.vert"),
                 Gdx.files.internal("shaders/post.frag"));
 
+
+        timerTextures = new Texture[6];
+        for (int i = 0; i < 6; ++i) {
+            timerTextures[i] = new Texture("timer"+i+".png");
+        }
         background1 = new Texture("background1.png");
         forestBackground = new Texture("fight-screen-forest.png");
         killphraseBox = new Texture("killphrase-box.png");
@@ -76,6 +84,14 @@ public class Assets {
         speechBubble = new NinePatch(speechBubbleTexture, 5, 5, 5, 5);
 
         // Animations
+        timerAnimation = new Animation(
+            1.f,
+            new TextureRegion(timerTextures[0]),
+            new TextureRegion(timerTextures[1]),
+            new TextureRegion(timerTextures[2]),
+            new TextureRegion(timerTextures[3]),
+            new TextureRegion(timerTextures[4]),
+            new TextureRegion(timerTextures[5]));
         puffAnimation = new Animation(
             Puff.puff_time,
             effectsRegions[2][3],
@@ -152,6 +168,9 @@ public class Assets {
         font32.dispose();
         font16.dispose();
         font8.dispose();
+        for (int i = 0; i < timerTextures.length; ++i) {
+            timerTextures[i].dispose();
+        }
     }
 
 }
