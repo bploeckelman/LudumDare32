@@ -25,6 +25,7 @@ import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.Utils.Callback;
 import lando.systems.ld32.Utils.Shake;
 import lando.systems.ld32.attackwords.AttackWord;
+import lando.systems.ld32.effects.CounterSpell;
 import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.effects.StunStars;
 import lando.systems.ld32.entities.Enemy;
@@ -58,6 +59,7 @@ public class FightScreen extends ScreenAdapter {
     Array<Puff> puffs;
     StunStars   stunStars;
     SpellWord   spellWord;
+    CounterSpell counterSpell;
 
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
@@ -94,6 +96,7 @@ public class FightScreen extends ScreenAdapter {
         stunStars = new StunStars();
 
         spellWord = null;
+        counterSpell = new CounterSpell();
     }
 
     @Override
@@ -161,7 +164,7 @@ public class FightScreen extends ScreenAdapter {
         }
 
         if (spellWord != null && spellWord.isComplete()) {
-            doPuff(screenCamera.viewportWidth / 2f, spellWord.bounds.y, 5f);
+            counterSpell.init(screenCamera.viewportWidth / 2f, spellWord.bounds.y, 5f);
             spellWord.removeSpell(this);
             spellWord = null;
             keyboardInputAdapter.spellWord = null;
@@ -255,6 +258,7 @@ public class FightScreen extends ScreenAdapter {
             // TODO: perform a fancy fanfare and revert back to overworld
             shake.shake(5f);
             stunStars.alive = false;
+            counterSpell.alive = false;
 
             enemy = EnemyFactory.getBoss(1);
             killPhrase = new KillPhrase(enemy.killPhrase);
@@ -277,6 +281,9 @@ public class FightScreen extends ScreenAdapter {
 
         if(stunStars.alive) {
             stunStars.update(delta);
+        }
+        if (counterSpell.alive) {
+            counterSpell.update(delta);
         }
 
         player.update(delta);
@@ -312,11 +319,13 @@ public class FightScreen extends ScreenAdapter {
                 spellWord.render(batch);
             }
 
+            batch.setColor(Color.WHITE);
             for (Puff puff : puffs) {
                 puff.render(batch);
             }
-
-            batch.setColor(Color.WHITE);
+            if (counterSpell.alive) {
+                counterSpell.render(batch);
+            }
 
             killPhrase.render(batch);
             if (staggerTimer > 0f) {

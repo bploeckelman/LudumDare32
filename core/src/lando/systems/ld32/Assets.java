@@ -5,11 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import lando.systems.ld32.effects.Explode;
-import lando.systems.ld32.effects.Puff;
-import lando.systems.ld32.effects.StunStars;
-import lando.systems.ld32.effects.Xout;
-import lando.systems.ld32.screens.FightScreen;
+import lando.systems.ld32.effects.*;
 
 public class Assets {
 
@@ -40,6 +36,7 @@ public class Assets {
     public static Animation stunStarsAnimation;
     public static Animation explodeAnimation;
     public static Animation xoutAnimation;
+    public static Animation counterSpellAnimation;
 
     public static Animation defaultEnemyAnimation;
     public static Animation defaultEnemyAnimation2;
@@ -116,6 +113,22 @@ public class Assets {
             Xout.xout_time,
             effectsRegions[1][2],
             effectsRegions[1][3]);
+        counterSpellAnimation = new Animation(
+            CounterSpell.counterspell_time,
+            effectsRegions[0][3],
+            effectsRegions[0][2],
+            effectsRegions[0][5],
+            effectsRegions[0][4],
+            effectsRegions[9][3],
+            effectsRegions[9][2],
+            effectsRegions[1][0],
+            effectsRegions[1][1],
+            effectsRegions[1][6],
+            effectsRegions[1][7],
+            effectsRegions[2][5],
+            effectsRegions[10][6],
+            effectsRegions[10][7]
+        );
 
         // TODO: Temporary animations
         defaultEnemyAnimation = new Animation(.3f,
