@@ -17,6 +17,9 @@ public class AttackWord {
     static final float move_delay_time  = 4.5f * flash_duration;
     static final float crosseye_spread_x = 2.25f;
     static final float crosseye_spread_y = 1.5f;
+    static final float crosseye_bubble_alpha = 0.3f;
+    static final float crosseye_text_alpha = 0.9f;
+    static final float dim_alpha = 0.6f;
     static final Color dark_font_color  = new Color(0.1f, 0.1f, 0.1f, 0.2f);
     static final Color dark_bubble_color= new Color(0.3f, 0.3f, 0.3f, 0.3f);
 
@@ -125,12 +128,13 @@ public class AttackWord {
         }
     }
 
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, boolean dim) {
         if (!visible) return;
 
         if (darkMode) batch.setColor(dark_bubble_color);
         else {
-            batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, crosseyeMode ? 0.3f : 1f);
+            final float alpha = crosseyeMode ? crosseye_bubble_alpha : (dim ? dim_alpha : 1f);
+            batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, alpha);
         }
         if (crosseyeMode) {
             Assets.speechBubble.draw(batch, bounds.x - crosseye_spread_x, bounds.y + crosseye_spread_y, bounds.width, bounds.height);
@@ -155,7 +159,8 @@ public class AttackWord {
 
         if (darkMode) font.setColor(dark_font_color);
         else {
-            font.setColor(1, 1, 1, crosseyeMode ? 0.9f : 1f);
+            final float alpha = crosseyeMode ? crosseye_text_alpha : (dim ? dim_alpha : 1f);
+            font.setColor(1, 1, 1, alpha);
         }
         if (crosseyeMode) {
             font.draw(batch, lowerWord, textX - crosseye_spread_x, textY + crosseye_spread_y);

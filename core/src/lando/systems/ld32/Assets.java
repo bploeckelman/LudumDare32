@@ -26,6 +26,10 @@ public class Assets {
     public static Texture enemyTexture;
     public static Texture effectsTexture;
     public static Texture stunStarsTexture;
+    public static Texture noiseTexture;
+    public static TextureRegion noiseRegionX;
+    public static TextureRegion noiseRegionY;
+    public static TextureRegion noiseRegionXY;
     public static TextureRegion[][] enemyRegions;
     public static TextureRegion[][] effectsRegions;
     public static TextureRegion[][] stunStarsRegions;
@@ -75,6 +79,11 @@ public class Assets {
         enemyTexture = new Texture("oryx_16bit_scifi_creatures_extra_trans.png");
         effectsTexture = new Texture("oryx_16bit_scifi_FX_lg_trans.png");
         stunStarsTexture = new Texture("stun-stars.png");
+        noiseTexture = new Texture("sandstorm.png");
+        noiseTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+        noiseRegionX = new TextureRegion(noiseTexture);
+        noiseRegionY = new TextureRegion(noiseTexture);
+        noiseRegionXY = new TextureRegion(noiseTexture);
         enemyRegions = TextureRegion.split(enemyTexture, 24, 24);
         effectsRegions = TextureRegion.split(effectsTexture, 32, 32);
         stunStarsRegions = TextureRegion.split(stunStarsTexture, 24, 16);
@@ -177,6 +186,7 @@ public class Assets {
         speechBubbleTexture.dispose();
         enemyTexture.dispose();
         effectsTexture.dispose();
+        noiseTexture.dispose();
         postShader.dispose();
         font32.dispose();
         font16.dispose();

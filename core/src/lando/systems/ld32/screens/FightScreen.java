@@ -43,6 +43,8 @@ public class FightScreen extends ScreenAdapter {
     // TODO: set relative to kill phrase length or enemy strength?
     private static final float stagger_time = 4f;
     private static final float post_timeout = 6f;
+    private static final float noise_scroll_speed_x = 0.5f;
+    private static final float noise_scroll_speed_y = 0.2f;
 
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
@@ -64,6 +66,8 @@ public class FightScreen extends ScreenAdapter {
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
 
+//    MutableFloat noiseFadeout; // TODO: if time, fade out noise on doNoise set to false
+    public boolean doNoise = false;
     boolean doPost = false;
     float accum = 0f;
     float timerStateTime = 0f;
@@ -114,6 +118,11 @@ public class FightScreen extends ScreenAdapter {
                 accum = 0f;
                 doPost = false;
             }
+        }
+        if (doNoise) {
+            Assets.noiseRegionX.scroll(noise_scroll_speed_x * delta, 0);
+            Assets.noiseRegionY.scroll(0, -noise_scroll_speed_y * delta);
+            Assets.noiseRegionXY.scroll(noise_scroll_speed_x * delta, -noise_scroll_speed_y * delta);
         }
 
         GameInstance.tweens.update(delta);
@@ -306,15 +315,26 @@ public class FightScreen extends ScreenAdapter {
             batch.setColor(backgroundColor);
             batch.draw(Assets.forestBackground, -64, -64);
 
+            player.render(batch);
             enemy.render(batch);
-            for(int i=0; i<attackWords.size; i++) {
-                attackWords.get(i).render(batch);
-            }
+
             if(stunStars.alive) {
                 stunStars.render(batch);
             }
 
-            player.render(batch);
+            // Render attack words
+            for(int i=0; i<attackWords.size; i++) {
+                attackWords.get(i).render(batch, doNoise);
+            }
+
+            if (doNoise) {
+                batch.setColor(1, 1, 1, 0.5f);
+                batch.draw(Assets.noiseRegionY, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
+                batch.setColor(1, 1, 1, 1);
+                batch.draw(Assets.noiseRegionX, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
+                batch.draw(Assets.noiseRegionXY, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
+                batch.setColor(backgroundColor);
+            }
 
             if (spellWord != null) {
                 spellWord.render(batch);

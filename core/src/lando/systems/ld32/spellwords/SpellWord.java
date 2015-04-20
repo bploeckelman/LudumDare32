@@ -19,9 +19,11 @@ public abstract class SpellWord {
     public static enum Type {
         DARKNESS(1),
         QUIET(2),
+        SANDSTORM(3),
         CROSSEYED(5);
 
         public int num;
+
         Type(int i) {
             num = i;
         }
@@ -34,6 +36,7 @@ public abstract class SpellWord {
         switch (spellNum) {
             case 1: return new Darkness();
             case 2: return new Quiet();
+            case 3: return new Sandstorm();
             case 5: return new Crosseyed();
         }
 
