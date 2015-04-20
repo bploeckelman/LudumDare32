@@ -9,10 +9,11 @@ import lando.systems.ld32.Constants;
 import lando.systems.ld32.Statistics;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.spellwords.SpellWord;
-import lando.systems.ld32.spellwords.Ventriloquism;
 
 public class Enemy extends Entity {
     static final float ventriloquist_offset = Constants.win_width / 5f;
+    static final float default_spell_delay = 10f;
+    static final float spell_delay_offset = 4f;
 
     float attackTimer;
     float attackDelay;
@@ -106,7 +107,8 @@ public class Enemy extends Entity {
     }
 
     public void setSpellTimer(float spellTimer) {
-        // TODO: randomly reset spellDelay around some default
+        this.spellDelay = MathUtils.random(default_spell_delay - spell_delay_offset,
+                                           default_spell_delay + spell_delay_offset);
         this.spellTimer = spellTimer;
     }
 
