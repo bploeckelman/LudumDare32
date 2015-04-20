@@ -1,5 +1,9 @@
 package lando.systems.ld32.spellwords;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.equations.Expo;
+import aurelienribon.tweenengine.equations.Sine;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -8,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
+import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.killphrase.KillPhrase;
 import lando.systems.ld32.screens.FightScreen;
 
@@ -42,12 +47,15 @@ public abstract class SpellWord {
     final String     word;
     final String     reverseWord;
     final BitmapFont font;
-    final float fontScale = 2f;
+    final float      font_scale = 1.5f;
+    final float      offset_increment;
 
-    TextBounds textBounds;
-    Rectangle  bounds;
-    String     typed;
-    String[]   letters;
+    TextBounds   textBounds;
+    String       typed;
+    String[]     letters;
+    MutableFloat offset;
+
+    public Rectangle bounds;
 
     public SpellWord(String word) {
         this.word = word.toUpperCase();
@@ -63,14 +71,21 @@ public abstract class SpellWord {
             letters[i] = "" + this.word.charAt(i);
         }
 
-        font.setScale(fontScale);
+        font.setScale(font_scale);
         textBounds = new TextBounds(font.getBounds(word));
-        font.setScale(1f);
+        font.setScale(1);
 
         bounds = new Rectangle(
                 Constants.win_width - margin - textBounds.width,
                 Constants.win_height - narrative_row_height - killphrase_row_height - row_height,
                 Constants.win_width, Constants.win_height);
+
+        offset = new MutableFloat(0f);
+
+        final float x0 = bounds.x;
+        final float x1 = Constants.win_width / 2f;
+        final float end_offset = (x1 - x0);
+        offset_increment = end_offset / word.length();
     }
 
     public abstract void applySpell(FightScreen fightScreen);
@@ -79,12 +94,12 @@ public abstract class SpellWord {
 
     public void render(SpriteBatch batch) {
         // TODO: draw an underlay?
-        font.setScale(fontScale);
-        font.setColor(Color.WHITE);
-        font.draw(batch, word, bounds.x, bounds.y);
-
+        font.setScale(font_scale);
         font.setColor(Color.ORANGE);
-        font.draw(batch, typed, margin, bounds.y);
+        font.draw(batch, word, bounds.x + offset.floatValue(), bounds.y);
+
+        font.setColor(Color.CYAN);
+        font.draw(batch, typed, margin - offset.floatValue(), bounds.y);
 
         font.setScale(1f);
         font.setColor(Color.WHITE);
@@ -108,6 +123,11 @@ public abstract class SpellWord {
         int letter = Input.Keys.valueOf(letters[lastIndex - i]);
         if (keycode == letter) {
             typed += letters[lastIndex - i];
+            final float target = offset.floatValue() + offset_increment;
+            Tween.to(offset, -1, 0.2f)
+                 .target(target)
+                 .ease(Sine.OUT)
+                 .start(GameInstance.tweens);
         }
     }
 

@@ -161,6 +161,7 @@ public class FightScreen extends ScreenAdapter {
         }
 
         if (spellWord != null && spellWord.isComplete()) {
+            doPuff(screenCamera.viewportWidth / 2f, spellWord.bounds.y, 5f);
             spellWord.removeSpell(this);
             spellWord = null;
             keyboardInputAdapter.spellWord = null;
@@ -179,7 +180,7 @@ public class FightScreen extends ScreenAdapter {
             final AttackWord word = attackWords.first();
             if (word.isComplete() && !word.disabled) {
                 word.disabled = true;
-                doPuff(word.bounds, 3f);
+                doPuff(word.bounds, 2f);
 
                 Vector2 targetLetter = killPhrase.enableLetter(new Callback() {
                     @Override
@@ -209,7 +210,7 @@ public class FightScreen extends ScreenAdapter {
                     keyboardInputAdapter.staggerWindow = true;
 
                     for (AttackWord attackWord : attackWords) {
-                        doPuff(attackWord.bounds, 2f);
+                        doPuff(attackWord.bounds, 1.5f);
                     }
                     attackWords.clear();
 
@@ -350,8 +351,12 @@ public class FightScreen extends ScreenAdapter {
     private void doPuff(Rectangle bounds, float scale) {
         float x = bounds.x + bounds.width / 2f;
         float y = bounds.y + bounds.height / 2f;
+        doPuff(x, y, scale);
+    }
+
+    private void doPuff(float x, float y, float scale) {
         Puff puff = Puff.puffPool.obtain();
-        puff.init(x, y);
+        puff.init(x, y, scale);
         puffs.add(puff);
     }
 
