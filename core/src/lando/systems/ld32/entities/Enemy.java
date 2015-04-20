@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.attackwords.AttackWord;
+import lando.systems.ld32.spellwords.Darkness;
 import lando.systems.ld32.spellwords.Silence;
 import lando.systems.ld32.spellwords.SpellWord;
 
@@ -59,7 +60,8 @@ public class Enemy extends Entity {
     public SpellWord generateSpell() {
         SpellWord spellWord = null;
         if (spellTimer > spellDelay) {
-            spellWord = new Silence(font);
+//            spellWord = new Silence(font);
+            spellWord = new Darkness(font);
         }
         return spellWord;
     }

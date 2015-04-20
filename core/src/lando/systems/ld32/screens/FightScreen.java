@@ -287,7 +287,7 @@ public class FightScreen extends ScreenAdapter {
         puffs.add(puff);
     }
 
-    private void tweenBgColor(float r, float g, float b, float rate) {
+    public void tweenBgColor(float r, float g, float b, float rate) {
         Tween.to(backgroundColor, ColorAccessor.RGB, rate)
             .target(r, g, b)
             .ease(Quint.INOUT)

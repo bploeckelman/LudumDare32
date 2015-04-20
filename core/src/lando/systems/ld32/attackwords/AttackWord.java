@@ -17,9 +17,12 @@ public class AttackWord {
     static final float move_delay_time  = 4.5f * flash_duration;
     static final float small_scale      = 0.8f;
     static final float normal_scale     = 1.5f;
+    static final Color dark_font_color  = new Color(0.1f, 0.1f, 0.1f, 0.2f);
+    static final Color dark_bubble_color= new Color(0.3f, 0.3f, 0.3f, 0.3f);
 
     public static final float flyoff_duration = .8f;
     public static boolean smallWords = false;
+    public static boolean darkMode = false;
 
     final String     word;
     final String[]   letters;
@@ -114,7 +117,8 @@ public class AttackWord {
     public void render(SpriteBatch batch) {
         if (!visible) return;
 
-        batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, 1);
+        if (darkMode) batch.setColor(dark_bubble_color);
+        else          batch.setColor(1f, 1f - dangerLevel, 1f - dangerLevel, 1);
         Assets.speechBubble.draw(batch, bounds.x, bounds.y, bounds.width, bounds.height);
         batch.setColor(1, 1, 1, 1);
 
@@ -131,7 +135,9 @@ public class AttackWord {
             textY = bounds.y + bounds.height / 2f + normalTextBounds.height / 2f;
         }
 
+        if (darkMode) font.setColor(dark_font_color);
         font.draw(batch, word, textX, textY);
+        if (darkMode) font.setColor(1, 1, 1, 1);
 
         font.setColor(Color.CYAN);
         font.draw(batch, typed, textX, textY);
