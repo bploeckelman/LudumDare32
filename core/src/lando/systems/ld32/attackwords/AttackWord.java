@@ -26,7 +26,9 @@ public class AttackWord {
     public static boolean darkMode = false;
 
     final String     word;
+    final String     lowerWord;
     final String[]   letters;
+    final String[]   lowercase;
     final TextBounds normalTextBounds;
     final TextBounds smallTextBounds;
 
@@ -44,9 +46,12 @@ public class AttackWord {
 
     public AttackWord(String word) {
         this.word = word.toUpperCase();
+        this.lowerWord = word.toLowerCase();
         this.letters = new String[word.length()];
+        this.lowercase = new String[word.length()];
         for (int i = 0; i < this.word.length(); ++i) {
             letters[i] = "" + this.word.charAt(i);
+            lowercase[i] = "" + this.lowerWord.charAt(i);
         }
         this.typed = "";
 
@@ -88,12 +93,12 @@ public class AttackWord {
 
         int letter = Input.Keys.valueOf(letters[i]);
         if (keycode == letter) {
-            typed += letters[i];
+            typed += lowercase[i];
         }
     }
 
     public boolean isComplete() {
-        return typed.equalsIgnoreCase(word);
+        return typed.equalsIgnoreCase(lowerWord);
     }
 
     public void update(float delta) {
@@ -140,7 +145,7 @@ public class AttackWord {
 
         if (darkMode) font.setColor(dark_font_color);
         else          font.setColor(1, 1, 1, 1);
-        font.draw(batch, word, textX, textY);
+        font.draw(batch, lowerWord, textX, textY);
         if (darkMode) font.setColor(0, 0, 0, 1);
 
         font.setColor(Color.CYAN);
