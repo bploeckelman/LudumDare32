@@ -75,10 +75,17 @@ public class AttackWord {
     }
 
     public AttackWord fire(float x, float y) {
+        return fire(x, y, false);
+    }
+
+    public AttackWord fire(float x, float y, boolean ventriloquist) {
         typed = "";
         bounds.x = x;
         bounds.y = y;
         moveDelay = move_delay_time;
+        if (ventriloquist) {
+            accel.add(0, -60);
+        }
         return this;
     }
 

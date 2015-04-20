@@ -195,7 +195,8 @@ public class EnemyFactory {
                         SpellWord.Type.DARKNESS,
                         SpellWord.Type.SANDSTORM,
                         SpellWord.Type.SEASICKNESS,
-                        SpellWord.Type.CROSSEYED
+                        SpellWord.Type.CROSSEYED,
+                        SpellWord.Type.VENTRILOQUISM
                 }
         ));
         killPhrases.put("Chicken", new String[]{

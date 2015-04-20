@@ -56,7 +56,7 @@ public class FightScreen extends ScreenAdapter {
     OrthographicCamera screenCamera;
     Shake shake;
 
-    Enemy             enemy;
+    public Enemy      enemy;
     Array<AttackWord> attackWords;
     KillPhrase        killPhrase;
 

@@ -21,7 +21,8 @@ public abstract class SpellWord {
         QUIET(2),
         SANDSTORM(3),
         SEASICKNESS(4),
-        CROSSEYED(5);
+        CROSSEYED(5),
+        VENTRILOQUISM(6);
 
         public int num;
 
@@ -40,6 +41,7 @@ public abstract class SpellWord {
             case 3: return new Sandstorm();
             case 4: return new Seasickness();
             case 5: return new Crosseyed();
+            case 6: return new Ventriloquism();
         }
 
         return null;
