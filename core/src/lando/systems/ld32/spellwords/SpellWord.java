@@ -11,6 +11,27 @@ import lando.systems.ld32.killphrase.KillPhrase;
 import lando.systems.ld32.screens.FightScreen;
 
 public abstract class SpellWord {
+    public static enum Type {
+        DARKNESS(1),
+        SILENCE(2);
+
+        public int num;
+        Type(int i) {
+            num = i;
+        }
+    }
+
+    public static SpellWord create(String spellName, BitmapFont font) {
+        return create(Type.valueOf(spellName).num, font);
+    }
+    public static SpellWord create(int spellNum, BitmapFont font) {
+        switch (spellNum) {
+            case 1: return new Darkness(font);
+            case 2: return new Silence(font);
+        }
+
+        return null;
+    }
 
     public static final float margin                = 10f;
     public static final float row_height            = 32f;

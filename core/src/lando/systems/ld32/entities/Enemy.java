@@ -19,6 +19,7 @@ public class Enemy extends Entity {
     BitmapFont font;
     public float scale = 2.5f;
     String[] attackDictionary;
+    SpellWord.Type[] spellDictionary;
     public String killPhrase;
 
     public Enemy(
@@ -26,12 +27,14 @@ public class Enemy extends Entity {
         Animation animation,
         float attackDelay,
         String[] attackDictionary,
+        SpellWord.Type[] spellDictionary,
         String killPhrase)
     {
         this.font = font;
         this.animation = animation;
         this.attackDelay = attackDelay;
         this.attackDictionary = attackDictionary;
+        this.spellDictionary = spellDictionary;
         this.killPhrase = killPhrase;
 
         keyFrame = animation.getKeyFrame(animationTimer);
@@ -60,8 +63,8 @@ public class Enemy extends Entity {
     public SpellWord generateSpell() {
         SpellWord spellWord = null;
         if (spellTimer > spellDelay) {
-//            spellWord = new Silence(font);
-            spellWord = new Darkness(font);
+            spellWord = SpellWord.create(
+                spellDictionary[MathUtils.random(0, spellDictionary.length-1)].num, font);
         }
         return spellWord;
     }
