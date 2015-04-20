@@ -207,16 +207,22 @@ public class FightScreen extends ScreenAdapter {
                 if (killPhrase.isComplete()) {
                     staggerTimer = stagger_time;
                     keyboardInputAdapter.staggerWindow = true;
-                    // TODO: puff all attack words prior to clearing
+                    shake.shake(1f);
+
+                    for (AttackWord attackWord : attackWords) {
+                        doPuff(attackWord.bounds, 2f);
+                    }
                     attackWords.clear();
+
                     stunStars.init(
                         enemy.position.x +
                             (Assets.stunStarsRegions[0][0].getRegionWidth() / 2) * StunStars.stunstars_scale,
                         enemy.position.y + enemy.keyFrame.getRegionHeight() * enemy.scale);
                     enemy.paused = true;
-                    tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
+
                     killPhrase.tweenDown();
-                    shake.shake(1f);
+
+                    tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
                 }
             }
             else if (word.bounds.x < player.position.x && !word.disabled) {
