@@ -37,6 +37,7 @@ public class AttackWord {
 
     public boolean    disabled;
     public Vector2    velocity;
+    public Vector2    accel;
     public Vector2    origin;
     public Rectangle  bounds;
     public float dangerLevel = 0f;
@@ -56,7 +57,8 @@ public class AttackWord {
         this.normalTextBounds = new TextBounds(normalFont.getBounds(this.word));
 
         this.bounds = new Rectangle(0, 0, normalTextBounds.width + 2 * bubble_margin, normalTextBounds.height + 2 * bubble_margin);
-        this.velocity = new Vector2(default_velocity, 0);
+        this.velocity = new Vector2(default_velocity * 1.25f, -default_velocity * 0.75f);
+        this.accel = new Vector2(0, -80);
         this.disabled = false;
         this.origin = new Vector2(bounds.x, bounds.y);
     }
@@ -108,6 +110,8 @@ public class AttackWord {
         }
 
         if (moveDelay == 0f) {
+            velocity.x += delta * accel.x;
+            velocity.y += delta * accel.y;
             bounds.x += delta * velocity.x;
             bounds.y += delta * velocity.y;
         }
