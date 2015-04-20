@@ -136,8 +136,9 @@ public class AttackWord {
         }
 
         if (darkMode) font.setColor(dark_font_color);
+        else          font.setColor(1, 1, 1, 1);
         font.draw(batch, word, textX, textY);
-        if (darkMode) font.setColor(1, 1, 1, 1);
+        if (darkMode) font.setColor(0, 0, 0, 1);
 
         font.setColor(Color.CYAN);
         font.draw(batch, typed, textX, textY);
