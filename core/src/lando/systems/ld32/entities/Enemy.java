@@ -7,10 +7,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.attackwords.AttackWord;
+import lando.systems.ld32.spellwords.Silence;
+import lando.systems.ld32.spellwords.SpellWord;
 
 public class Enemy extends Entity {
     float attackTimer;
     float attackDelay;
+    float spellTimer;
+    float spellDelay;
     BitmapFont font;
     public float scale = 2.5f;
     String[] attackDictionary;
@@ -33,6 +37,9 @@ public class Enemy extends Entity {
 
         attackTimer = 0;
         position = new Vector2(Constants.win_width*.8f, Constants.win_height*.1f);
+
+        spellTimer = 0;
+        spellDelay = 10f;
     }
 
     public AttackWord generateAttack() {
@@ -49,10 +56,19 @@ public class Enemy extends Entity {
         return null;
     }
 
+    public SpellWord generateSpell() {
+        SpellWord spellWord = null;
+        if (spellTimer > spellDelay) {
+            spellWord = new Silence(font);
+        }
+        return spellWord;
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);
         attackTimer += delta;
+        spellTimer += delta;
     }
 
     @Override
@@ -63,4 +79,9 @@ public class Enemy extends Entity {
                    keyFrame.getRegionWidth() * scale,
                    keyFrame.getRegionHeight() * scale);
     }
+
+    public void setSpellTimer(float spellTimer) {
+        this.spellTimer = spellTimer;
+    }
+
 }

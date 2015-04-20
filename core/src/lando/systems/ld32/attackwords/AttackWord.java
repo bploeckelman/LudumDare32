@@ -15,16 +15,20 @@ public class AttackWord {
     static final float default_velocity = -120f;
     static final float flash_duration   = 0.15f;
     static final float move_delay_time  = 4.5f * flash_duration;
-    public static final float flyoff_duration = .8f;
+    static final float small_scale      = 0.8f;
+    static final float normal_scale     = 1.5f;
 
+    public static final float flyoff_duration = .8f;
+    public static boolean smallWords = false;
 
     final String     word;
     final String[]   letters;
-    final TextBounds textBounds;
+    final TextBounds normalTextBounds;
+    final TextBounds smallTextBounds;
 
-    String typed;
-    float moveDelay;
-    float flashTimer;
+    String  typed;
+    float   moveDelay;
+    float   flashTimer;
     boolean visible;
 
     public boolean    disabled;
@@ -32,18 +36,24 @@ public class AttackWord {
     public Vector2    origin;
     public BitmapFont font;
     public Rectangle  bounds;
-    public float      dangerLevel = 0f;
+    public float dangerLevel = 0f;
 
     public AttackWord(String word, BitmapFont font) {
         this.word = word.toUpperCase();
         this.letters = new String[word.length()];
         for (int i = 0; i < this.word.length(); ++i) {
-            letters[i] = ""+this.word.charAt(i);
+            letters[i] = "" + this.word.charAt(i);
         }
         this.typed = "";
         this.font = font;
-        this.textBounds = new TextBounds(font.getBounds(this.word));
-        this.bounds = new Rectangle(0, 0, textBounds.width + 2 * bubble_margin, textBounds.height + 2 * bubble_margin);
+
+        font.setScale(small_scale);
+        this.smallTextBounds = new TextBounds(font.getBounds(this.word));
+        font.setScale(normal_scale);
+        this.normalTextBounds = new TextBounds(font.getBounds(this.word));
+        font.setScale(1f);
+
+        this.bounds = new Rectangle(0, 0, normalTextBounds.width + 2 * bubble_margin, normalTextBounds.height + 2 * bubble_margin);
         this.velocity = new Vector2(default_velocity, 0);
         this.disabled = false;
         this.origin = new Vector2(bounds.x, bounds.y);
@@ -110,13 +120,24 @@ public class AttackWord {
 
         if (disabled) return;
 
-        float textX = bounds.x + bounds.width  / 2f - textBounds.width  / 2f;
-        float textY = bounds.y + bounds.height / 2f + textBounds.height / 2f;
+        float textX, textY;
+        if (smallWords) {
+            font.setScale(small_scale);
+            textX = bounds.x + bounds.width  / 2f - smallTextBounds.width  / 2f;
+            textY = bounds.y + bounds.height / 2f + smallTextBounds.height / 2f;
+        } else {
+            font.setScale(normal_scale);
+            textX = bounds.x + bounds.width  / 2f - normalTextBounds.width  / 2f;
+            textY = bounds.y + bounds.height / 2f + normalTextBounds.height / 2f;
+        }
+
         font.draw(batch, word, textX, textY);
 
         font.setColor(Color.CYAN);
         font.draw(batch, typed, textX, textY);
         font.setColor(Color.WHITE);
+
+        font.setScale(1);
     }
 
 }

@@ -32,6 +32,8 @@ import lando.systems.ld32.input.KeyboardInputAdapter;
 import lando.systems.ld32.killphrase.KillPhrase;
 import lando.systems.ld32.tweens.ColorAccessor;
 import lando.systems.ld32.tweens.RectangleAccessor;
+import lando.systems.ld32.spellwords.Silence;
+import lando.systems.ld32.spellwords.SpellWord;
 
 public class FightScreen extends ScreenAdapter {
     GameInstance game;
@@ -51,7 +53,8 @@ public class FightScreen extends ScreenAdapter {
 
     Player      player;
     Array<Puff> puffs;
-    StunStars stunStars;
+    StunStars   stunStars;
+    SpellWord   spellWord;
 
     KeyboardInputAdapter keyboardInputAdapter;
     float                staggerTimer;
@@ -80,6 +83,8 @@ public class FightScreen extends ScreenAdapter {
 
         puffs = new Array<Puff>();
         stunStars = new StunStars();
+
+        spellWord = null;
     }
 
     @Override
@@ -125,6 +130,20 @@ public class FightScreen extends ScreenAdapter {
             if (word != null) {
                 attackWords.add(word);
             }
+            if (spellWord == null) {
+                spellWord = enemy.generateSpell();
+                if (spellWord != null) {
+                    spellWord.applySpell(this);
+                }
+                keyboardInputAdapter.spellWord = spellWord;
+            }
+        }
+
+        if (spellWord != null && spellWord.isComplete()) {
+            spellWord.removeSpell(this);
+            spellWord = null;
+            keyboardInputAdapter.spellWord = null;
+            enemy.setSpellTimer(0f);
         }
 
         for (AttackWord word : attackWords) {
@@ -234,6 +253,10 @@ public class FightScreen extends ScreenAdapter {
             }
 
             player.render(batch);
+
+            if (spellWord != null) {
+                spellWord.render(batch);
+            }
 
             for (Puff puff : puffs) {
                 puff.render(batch);
