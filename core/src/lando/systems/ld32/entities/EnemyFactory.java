@@ -1,6 +1,7 @@
 package lando.systems.ld32.entities;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.spellwords.SpellWord;
@@ -66,6 +67,7 @@ public class EnemyFactory {
         bosses.put("Librarian", new Config(
                 Assets.librarianAnimation,
                 3,
+                Assets.libraryBackgroundRegion,
                 new String[]{
                         "SHUSH",
                         "READ",
@@ -84,6 +86,7 @@ public class EnemyFactory {
         bosses.put("Ogre", new Config(
                 Assets.ogreAnimation,
                 3,
+                Assets.forestBackgroundRegion,
                 new String[]{
                         "SMASH",
                         "CRUSH",
@@ -106,6 +109,7 @@ public class EnemyFactory {
         bosses.put("Bat", new Config(
                 Assets.batAnimation,
                 3,
+                Assets.caveBackgroundRegion,
                 new String[]{
                         "FLAP",
                         "FLUTTER",
@@ -128,6 +132,7 @@ public class EnemyFactory {
         bosses.put("Scorpion", new Config(
                 Assets.scorpionAnimation,
                 3,
+                Assets.desertBackgroundRegion,
                 new String[]{
                         "STAB",
                         "SKITTER",
@@ -151,6 +156,7 @@ public class EnemyFactory {
         bosses.put("WaterCube", new Config(
                 Assets.waterCubeAnimation,
                 3,
+                Assets.waterBackgroundRegion,
                 new String[]{
                         "SPLASH",
                         "DROWN",
@@ -175,6 +181,7 @@ public class EnemyFactory {
         bosses.put("Beholder", new Config(
                 Assets.beholderAnimation,
                 3,
+                Assets.dungeonBackgroundRegion,
                 new String[]{
                         "GAZE",
                         "STARE DOWN",
@@ -200,6 +207,7 @@ public class EnemyFactory {
         bosses.put("Chicken", new Config(
                 Assets.chickenAnimation,
                 3,
+                Assets.towerBackgroundRegion,
                 new String[]{
                         "PECK",
                         "STRUT",
@@ -230,42 +238,52 @@ public class EnemyFactory {
     private static class Config {
         Animation animation;
         float attackDelay;
+        TextureRegion backgroundRegion;
         String[] attackDictionary;
         SpellWord.Type[] spellDictionary;
 
         public Config(
             Animation animation,
             float attackDelay,
+            TextureRegion backgroundRegion,
             String[] attackDictionary,
             SpellWord.Type[] spellDictionary)
         {
             this.attackDelay = attackDelay;
             this.animation = animation;
+            this.backgroundRegion = backgroundRegion;
             this.attackDictionary = attackDictionary;
             this.spellDictionary = spellDictionary;
         }
     }
 
     private static Enemy createEnemy(Config config, String killPhrase) {
-        return new Enemy(config.animation, config.attackDelay, config.attackDictionary, config.spellDictionary, killPhrase);
-}
+        Enemy enemy = new Enemy(config.animation,
+                         config.attackDelay,
+                         config.attackDictionary,
+                         config.spellDictionary,
+                         killPhrase);
+        enemy.backgroundRegion = config.backgroundRegion;
+        return enemy;
+    }
 
     public static Enemy getBoss(int level) {
 
-//        String bossName;
+        String bossName;
 //        final int num_enemies = 7;
 //        switch (MathUtils.random(0, num_enemies - 1)) {
-//            case 0:  bossName = "Librarian"; break;
-//            case 1:  bossName = "Ogre";      break;
-//            case 2:  bossName = "Bat";       break;
-//            case 3:  bossName = "Scorpion";  break;
-//            case 4:  bossName = "WaterCube"; break;
-//            case 5:  bossName = "Beholder";  break;
-//            case 6:  bossName = "Chicken";   break;
-//            default: bossName = "Gozer";
-//        }
+        switch (level) {
+            case 0:  bossName = "Librarian"; break;
+            case 1:  bossName = "Ogre";      break;
+            case 2:  bossName = "Bat";       break;
+            case 3:  bossName = "Scorpion";  break;
+            case 4:  bossName = "WaterCube"; break;
+            case 5:  bossName = "Beholder";  break;
+            case 6:  bossName = "Chicken";   break;
+            default: bossName = "Gozer";
+        }
 
-        final String bossName = bossKeys.get(MathUtils.random(bossKeys.size() - 1));
+//        final String bossName = bossKeys.get(MathUtils.random(bossKeys.size() - 1));
         final String[] phrases = killPhrases.get(bossName);
         return createEnemy(bosses.get(bossName), phrases[MathUtils.random(0, phrases.length - 1)]);
     }

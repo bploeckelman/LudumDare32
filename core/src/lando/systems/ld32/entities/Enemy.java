@@ -3,6 +3,7 @@ package lando.systems.ld32.entities;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld32.Constants;
@@ -20,6 +21,7 @@ public class Enemy extends Entity {
     float spellTimer;
     float spellDelay;
     public float scale = 2.5f;
+    public TextureRegion backgroundRegion;
     String[] attackDictionary;
     SpellWord.Type[] spellDictionary;
     public String killPhrase;

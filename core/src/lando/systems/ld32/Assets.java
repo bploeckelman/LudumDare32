@@ -20,7 +20,13 @@ public class Assets {
 
     public static Texture[] timerTextures;
     public static Texture background1;
+    public static Texture libraryBackground;
     public static Texture forestBackground;
+    public static Texture caveBackground;
+    public static Texture desertBackground;
+    public static Texture waterBackground;
+    public static Texture dungeonBackground;
+    public static Texture towerBackground;
     public static Texture killphraseBox;
     public static Texture speechBubbleTexture;
     public static Texture enemyTexture;
@@ -31,6 +37,12 @@ public class Assets {
     public static TextureRegion noiseRegionY;
     public static TextureRegion noiseRegionXY;
     public static TextureRegion forestBackgroundRegion;
+    public static TextureRegion libraryBackgroundRegion;
+    public static TextureRegion caveBackgroundRegion;
+    public static TextureRegion desertBackgroundRegion;
+    public static TextureRegion waterBackgroundRegion;
+    public static TextureRegion dungeonBackgroundRegion;
+    public static TextureRegion towerBackgroundRegion;
     public static TextureRegion[][] enemyRegions;
     public static TextureRegion[][] effectsRegions;
     public static TextureRegion[][] stunStarsRegions;
@@ -74,7 +86,13 @@ public class Assets {
             timerTextures[i] = new Texture("timer"+i+".png");
         }
         background1 = new Texture("background1.png");
+        libraryBackground = new Texture("fight-screen-library.png");
         forestBackground = new Texture("fight-screen-forest.png");
+        caveBackground = new Texture("fight-screen-cave.png");
+        desertBackground = new Texture("fight-screen-desert.png");
+        waterBackground = new Texture("fight-screen-water.png");
+        dungeonBackground = new Texture("fight-screen-cellar.png");
+        towerBackground = new Texture("fight-screen-book.png");
         killphraseBox = new Texture("killphrase-box.png");
         speechBubbleTexture = new Texture("speech-bubble.png");
         enemyTexture = new Texture("oryx_16bit_scifi_creatures_extra_trans.png");
@@ -85,7 +103,13 @@ public class Assets {
         noiseRegionX = new TextureRegion(noiseTexture);
         noiseRegionY = new TextureRegion(noiseTexture);
         noiseRegionXY = new TextureRegion(noiseTexture);
+        libraryBackgroundRegion = new TextureRegion(libraryBackground);
         forestBackgroundRegion = new TextureRegion(forestBackground);
+        caveBackgroundRegion = new TextureRegion(caveBackground);
+        desertBackgroundRegion = new TextureRegion(desertBackground);
+        waterBackgroundRegion = new TextureRegion(waterBackground);
+        dungeonBackgroundRegion = new TextureRegion(dungeonBackground);
+        towerBackgroundRegion = new TextureRegion(towerBackground);
         enemyRegions = TextureRegion.split(enemyTexture, 24, 24);
         effectsRegions = TextureRegion.split(effectsTexture, 32, 32);
         stunStarsRegions = TextureRegion.split(stunStarsTexture, 24, 16);

@@ -49,6 +49,7 @@ public class FightScreen extends ScreenAdapter {
     private static final float seasick_rot_speed = 30f;
     private static final float seasick_min_angle = -10f;
     private static final float seasick_max_angle =  10f;
+    private static final float num_levels = 7;
 
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
@@ -58,8 +59,10 @@ public class FightScreen extends ScreenAdapter {
     Shake shake;
 
     public Enemy      enemy;
+    TextureRegion     backgroundRegion;
     Array<AttackWord> attackWords;
     KillPhrase        killPhrase;
+    int currentLevel = 0;
 
     Player      player;
     Array<Puff> puffs;
@@ -96,7 +99,8 @@ public class FightScreen extends ScreenAdapter {
         screenCamera.setToOrtho(false, Constants.win_width, Constants.win_height);
         screenCamera.update();
 
-        enemy = EnemyFactory.getBoss(1);
+        enemy = EnemyFactory.getBoss(currentLevel);
+        backgroundRegion = enemy.backgroundRegion;
         attackWords = new Array<AttackWord>();
         killPhrase = new KillPhrase(enemy.killPhrase);
         player = new Player();
@@ -122,6 +126,7 @@ public class FightScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
         Statistics.playTime += delta;
+        backgroundRegion = enemy.backgroundRegion;
 
         if (doPost) {
             accum += delta * 2f;
@@ -286,12 +291,18 @@ public class FightScreen extends ScreenAdapter {
         // Enemy destroyed
         if (killPhrase.isTyped()) {
             // TODO: perform a fancy fanfare and revert back to overworld
+            if (++currentLevel >= num_levels) {
+                game.setScreen(GameInstance.screens.get(Constants.game_over_screen));
+                return;
+            }
+
             shake.shake(5f);
             stunStars.alive = false;
             counterSpell.alive = false;
             Statistics.numFearsUncovered++;
 
-            enemy = EnemyFactory.getBoss(1);
+            enemy = EnemyFactory.getBoss(currentLevel);
+            backgroundRegion = enemy.backgroundRegion;
             killPhrase = new KillPhrase(enemy.killPhrase);
 
             if (spellWord != null) {
@@ -339,7 +350,7 @@ public class FightScreen extends ScreenAdapter {
             final float width = sceneCamera.viewportWidth + 128;
             final float height = sceneCamera.viewportHeight + 128;
             if (seasick) {
-                batch.draw(Assets.forestBackgroundRegion,
+                batch.draw(backgroundRegion,
                            bgx, bgy,
                            width / 2f,
                            height / 2f,
@@ -347,7 +358,7 @@ public class FightScreen extends ScreenAdapter {
                            1, 1,
                            seasickAngle);
             } else {
-                batch.draw(Assets.forestBackground, bgx, bgy, width, height);
+                batch.draw(backgroundRegion, bgx, bgy, width, height);
             }
 
             player.render(batch);
