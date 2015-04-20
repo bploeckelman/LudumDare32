@@ -62,6 +62,23 @@ public class EnemyFactory {
 //            "MY SHAMPOO",
 //            "WHY ARE YOU HERE"
 //        });
+        //---------------------------------------
+        bosses.put("Librarian", new Config(
+                Assets.librarianAnimation,
+                3,
+                new String[]{
+                        "SHUSH",
+                        "READ",
+                        "LEARN",
+                },
+                new SpellWord.Type[]{
+                        SpellWord.Type.SHHH
+                }
+        ));
+        killPhrases.put("Librarian", new String[]{
+                "DOG EAR PAGE",
+                "THE INTERNET",
+        });
 
         //---------------------------------------
         bosses.put("Ogre", new Config(

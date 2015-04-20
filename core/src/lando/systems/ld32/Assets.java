@@ -151,8 +151,8 @@ public class Assets {
             new TextureRegion(enemyRegions[3][0]));
         defaultEnemyAnimation2.setPlayMode(Animation.PlayMode.LOOP);
         librarianAnimation = new Animation(0.25f,
-            new TextureRegion(enemyRegions[6][9]),
-            new TextureRegion(enemyRegions[7][9]));
+            new TextureRegion(enemyRegions[2][6]),
+            new TextureRegion(enemyRegions[3][6]));
         librarianAnimation.setPlayMode(Animation.PlayMode.LOOP);
         ogreAnimation = new Animation(0.25f,
             new TextureRegion(enemyRegions[0][1]),
