@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.Utils.Callback;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.effects.Explode;
 import lando.systems.ld32.effects.Xout;
@@ -102,14 +103,18 @@ public class KillPhrase {
         }
     }
 
+
     public Vector2 enableLetter() {
+        return enableLetter(null);
+    }
+    public Vector2 enableLetter(Callback cb) {
         for(int i=0; i<phrase.length; i++) {
             if(!enabled[i]) {
                 enabled[i] = true;
                 if(phrase[i].equals(space)) {
                     continue;
                 }
-                tweenExplode(i);
+                tweenExplode(i, cb);
                 return temp.set(boxOrigins[i].x + boxSize / 2f, boxOrigins[i].y + boxSize / 2f).cpy();
             }
         }
@@ -252,13 +257,14 @@ public class KillPhrase {
         explode.init(x, y);
         explodes.add(explode);
     }
-    public void tweenExplode(final int letter) {
+    public void tweenExplode(final int letter, final Callback cb) {
         Tween.to(new MutableFloat(0f), -1, AttackWord.flyoff_duration - .2f)
             .setCallback(new TweenCallback() {
                 @Override
                 public void onEvent(int type, BaseTween<?> source) {
                     doExplode(boxOrigins[letter], 0f);
                     visible[letter] = true;
+                    if(cb != null) cb.run();
                     if (letter != phrase.length - 1) {
                         Tween.to(boxOrigins[letter], Vector2Accessor.X, .5f)
                             .waypoint(boxOrigins[letter].x - boxSpacing)
@@ -269,6 +275,9 @@ public class KillPhrase {
                     }
                 }
             }).start(GameInstance.tweens);
+    }
+    public void tweenExplode(final int letter) {
+        tweenExplode(letter, null);
     }
 
     private void doXout(Vector2 origin, float scale) {

@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.Array;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
+import lando.systems.ld32.Utils.Callback;
+import lando.systems.ld32.Utils.Shake;
 import lando.systems.ld32.attackwords.AttackWord;
 import lando.systems.ld32.effects.Puff;
 import lando.systems.ld32.effects.StunStars;
@@ -46,6 +48,7 @@ public class FightScreen extends ScreenAdapter {
     FrameBuffer        sceneFBO;
     TextureRegion      sceneRegion;
     OrthographicCamera sceneCamera;
+    Shake shake;
 
     Enemy             enemy;
     Array<AttackWord> attackWords;
@@ -71,6 +74,7 @@ public class FightScreen extends ScreenAdapter {
         sceneCamera = new OrthographicCamera();
         sceneCamera.setToOrtho(false, sceneFBO.getWidth(), sceneFBO.getHeight());
         sceneCamera.update();
+        shake = new Shake();
 
         font.setColor(0, 0, 0, 1);
         enemy = EnemyFactory.getBoss(font, 1);
@@ -98,6 +102,7 @@ public class FightScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
         GameInstance.tweens.update(delta);
+        shake.update(delta, sceneCamera, sceneCamera.viewportWidth/2, sceneCamera.viewportHeight/2);
 
         for (int i = puffs.size - 1; i >= 0; --i) {
             final Puff puff = puffs.get(i);
@@ -116,6 +121,7 @@ public class FightScreen extends ScreenAdapter {
             if(keyboardInputAdapter.staggerWindow) {
                 tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate);
                 killPhrase.tweenUp();
+                shake.shake(.33f);
             }
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
@@ -159,7 +165,12 @@ public class FightScreen extends ScreenAdapter {
                 word.disabled = true;
                 doPuff(word.bounds, 3f);
 
-                Vector2 targetLetter = killPhrase.enableLetter();
+                Vector2 targetLetter = killPhrase.enableLetter(new Callback() {
+                    @Override
+                    public void run() {
+                        shake.shake(.2f);
+                    }
+                });
                 if (targetLetter == null) {
                     attackWords.removeValue(word, true);
                 } else {
@@ -188,11 +199,13 @@ public class FightScreen extends ScreenAdapter {
                     enemy.paused = true;
                     tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
                     killPhrase.tweenDown();
+                    shake.shake(1f);
                 }
             }
             else if (word.bounds.x < player.position.x && !word.disabled) {
                 word.disabled = true;
                 doPuff(word.bounds, 2f);
+                shake.shake(.5f);
 
                 Vector2 targetLetter = killPhrase.disableLetter();
                 if (targetLetter == null) {
@@ -215,6 +228,7 @@ public class FightScreen extends ScreenAdapter {
 
         if (killPhrase.isTyped()) {
             // TODO: perform a fancy fanfare and revert back to overworld
+            shake.shake(5f);
             enemy = EnemyFactory.getBoss(font, 1);
             killPhrase = new KillPhrase(enemy.killPhrase, font);
             keyboardInputAdapter.killPhrase = killPhrase;
