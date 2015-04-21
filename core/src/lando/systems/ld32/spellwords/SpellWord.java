@@ -141,6 +141,7 @@ public abstract class SpellWord {
                  .target(target)
                  .ease(Sine.OUT)
                  .start(GameInstance.tweens);
+            Assets.keyValid.play(.2f);
         }
     }
 

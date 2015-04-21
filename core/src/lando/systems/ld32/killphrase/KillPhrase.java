@@ -229,6 +229,7 @@ public class KillPhrase {
         if (keycode == letter) {
             typed += phrase[i];
             Statistics.numLettersTyped++;
+            Assets.keyValid.play(.2f);
         }
     }
 
@@ -274,6 +275,7 @@ public class KillPhrase {
                             .target(boxOrigins[letter].x)
                             .ease(Back.INOUT)
                             .start(GameInstance.tweens);
+                        Assets.killphraseBump.play(.5f);
                     }
                 }
             }).start(GameInstance.tweens);
@@ -301,6 +303,7 @@ public class KillPhrase {
                         .ease(Cubic.OUT)
                         .repeatYoyo(1, 0f)
                         .start(GameInstance.tweens);
+                    Assets.killphraseCut.play(.5f);
                 }
             }).start(GameInstance.tweens);
     }

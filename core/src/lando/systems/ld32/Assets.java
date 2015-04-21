@@ -1,6 +1,8 @@
 package lando.systems.ld32;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -66,6 +68,15 @@ public class Assets {
     public static Animation waterCubeAnimation;
     public static Animation beholderAnimation;
     public static Animation chickenAnimation;
+
+    public static Sound keyValid;
+    public static Sound explosion;
+    public static Sound killphraseBump;
+    public static Sound killphraseCut;
+    public static Sound attackFired;
+    public static Sound staggerInit;
+    public static Sound staggerEnd;
+    public static Sound enemyDefeated;
 
     public static void load() {
         batch = new SpriteBatch();
@@ -206,6 +217,17 @@ public class Assets {
             new TextureRegion(enemyRegions[4][14]),
             new TextureRegion(enemyRegions[5][14]));
         chickenAnimation.setPlayMode(Animation.PlayMode.LOOP);
+
+
+        // Sounds
+        keyValid = Gdx.audio.newSound(Gdx.files.internal("key-valid.wav"));
+        explosion = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
+        killphraseBump = Gdx.audio.newSound(Gdx.files.internal("killphrase-bump.wav"));
+        killphraseCut = Gdx.audio.newSound(Gdx.files.internal("killphrase-cut.wav"));
+        attackFired = Gdx.audio.newSound(Gdx.files.internal("attack-fired.wav"));
+        staggerInit = Gdx.audio.newSound(Gdx.files.internal("stagger-init.wav"));
+        staggerEnd = Gdx.audio.newSound(Gdx.files.internal("stagger-badend.wav"));
+        enemyDefeated = Gdx.audio.newSound(Gdx.files.internal("enemy-defeated.wav"));
     }
 
     public static void dispose() {

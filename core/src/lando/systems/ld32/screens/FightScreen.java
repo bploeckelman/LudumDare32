@@ -174,6 +174,7 @@ public class FightScreen extends ScreenAdapter {
                 killPhrase.tweenUp();
                 shake.shake(.33f);
                 timerStateTime = 0f;
+                Assets.staggerEnd.play(.3f);
             }
             keyboardInputAdapter.staggerWindow = false;
             killPhrase.typed = "";
@@ -211,6 +212,7 @@ public class FightScreen extends ScreenAdapter {
             keyboardInputAdapter.spellWord = null;
             enemy.setSpellTimer(0f);
             shake.shake(1f);
+            Assets.explosion.play(.5f);
         }
 
         for (AttackWord word : attackWords) {
@@ -226,6 +228,7 @@ public class FightScreen extends ScreenAdapter {
             if (word.isComplete() && !word.disabled) {
                 word.disabled = true;
                 doPuff(word.bounds, 2f);
+                Assets.explosion.play(.5f);
                 Statistics.numWordsDefended++;
 
                 Vector2 targetLetter = killPhrase.enableLetter(new Callback() {
@@ -269,6 +272,8 @@ public class FightScreen extends ScreenAdapter {
                     enemy.paused = true;
 
                     killPhrase.tweenDown();
+
+                    Assets.staggerInit.play(.3f);
 
                     tweenBgColor(.5f, .5f, .5f, KillPhrase.dropRate);
                 }
@@ -327,6 +332,8 @@ public class FightScreen extends ScreenAdapter {
 
             doPost = true;
             accum = 0f;
+
+            Assets.enemyDefeated.play(.5f);
 
             tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
         }

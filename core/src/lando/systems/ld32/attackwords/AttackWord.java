@@ -88,6 +88,7 @@ public class AttackWord {
             accel.add(0, -60);
         }
         Statistics.numAttackWordsFired++;
+        Assets.attackFired.play(.1f);
         return this;
     }
 
@@ -110,6 +111,7 @@ public class AttackWord {
         if (keycode == letter) {
             typed += lowercase[i];
             Statistics.numLettersTyped++;
+            Assets.keyValid.play(.2f);
         }
     }
 
