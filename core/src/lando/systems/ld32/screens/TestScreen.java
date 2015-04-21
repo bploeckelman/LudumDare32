@@ -6,7 +6,6 @@ import aurelienribon.tweenengine.equations.Quint;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -72,8 +71,6 @@ public class TestScreen extends ScreenAdapter {
 
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
-
-        GameInstance.tweens.update(delta);
 
         final float bouncer_speed = 150.f;
         bouncerPos.add(bouncerVel.cpy().nor().scl(delta * bouncer_speed));

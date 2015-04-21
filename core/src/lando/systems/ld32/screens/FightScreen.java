@@ -151,7 +151,6 @@ public class FightScreen extends ScreenAdapter {
             seasickAngle += (rollLeft ? -1f : 1f) * seasick_rot_speed * delta;
         }
 
-        GameInstance.tweens.update(delta);
         shake.update(delta, sceneCamera, sceneCamera.viewportWidth/2, sceneCamera.viewportHeight/2);
 
         for (int i = puffs.size - 1; i >= 0; --i) {

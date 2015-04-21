@@ -51,6 +51,8 @@ public class GameInstance extends Game {
     @Override
     public void render() {
 
+        GameInstance.tweens.update(Gdx.graphics.getDeltaTime());
+
         super.render();
 
         Assets.batch.begin();
