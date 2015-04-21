@@ -301,6 +301,8 @@ public class FightScreen extends ScreenAdapter {
                          })
                          .start(GameInstance.tweens);
                 }
+
+                Assets.playerHurt.play(.2f);
             }
         }
 

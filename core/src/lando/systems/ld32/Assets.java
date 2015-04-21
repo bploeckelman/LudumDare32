@@ -77,6 +77,7 @@ public class Assets {
     public static Sound staggerInit;
     public static Sound staggerEnd;
     public static Sound enemyDefeated;
+    public static Sound playerHurt;
 
     public static void load() {
         batch = new SpriteBatch();
@@ -228,6 +229,7 @@ public class Assets {
         staggerInit = Gdx.audio.newSound(Gdx.files.internal("stagger-init.wav"));
         staggerEnd = Gdx.audio.newSound(Gdx.files.internal("stagger-badend.wav"));
         enemyDefeated = Gdx.audio.newSound(Gdx.files.internal("enemy-defeated.wav"));
+        playerHurt = Gdx.audio.newSound(Gdx.files.internal("player-hurt.wav"));
     }
 
     public static void dispose() {

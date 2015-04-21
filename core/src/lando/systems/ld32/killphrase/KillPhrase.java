@@ -303,7 +303,7 @@ public class KillPhrase {
                         .ease(Cubic.OUT)
                         .repeatYoyo(1, 0f)
                         .start(GameInstance.tweens);
-                    Assets.killphraseCut.play(.5f);
+                    Assets.killphraseCut.play(.2f);
                 }
             }).start(GameInstance.tweens);
     }
