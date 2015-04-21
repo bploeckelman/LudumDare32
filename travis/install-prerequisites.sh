@@ -6,19 +6,10 @@ set -xv
 # Assume that we are using a dumb terminal (produces cleaner output on build servers).
 export TERM="dumb"
 
-# If possible, update the system and install any necessary packages.
-# Is this necessary?
-#if hash apt-get 2>/dev/null; then
-#
-#	apt-get update -qq
-#	if [ `uname -m` = x86_64 ]; then
-#		apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null
-#	fi
-#
-#fi
+export ANDROID_HOME="$(pwd)/travis/android-sdk-linux"
 
 # If the Android SDK is not installed then download and install it.
-if [ -z "${ANDROID_HOME}" ]; then
+if [ ! -d "${ANDROID_HOME}" ]; then
 
 	# Set the version of the Android SDK to install.
 	android_sdk_version="24.0.1"
@@ -26,14 +17,12 @@ if [ -z "${ANDROID_HOME}" ]; then
 	# Download the Android SDK.
 	wget --quiet "http://dl.google.com/android/android-sdk_r${android_sdk_version}-linux.tgz"
 
-	# Install the Android SDK to /opt.
+	# Install the Android SDK to the travis folder.
 	tar -C travis -xzf "android-sdk_r${android_sdk_version}-linux.tgz"
-	export ANDROID_HOME="$(pwd)/travis/android-sdk-linux"
 
+  # Add the Android SDK tools to the PATH.
+  export PATH="${PATH}:${ANDROID_HOME}/tools"
+
+  # Install/update the required Android SDK components.
+  echo yes | android update sdk -a --filter "platform-tools,build-tools-20.0.0,android-20" --no-ui --force > /dev/null
 fi
-
-# Add the Android SDK tools to the PATH.
-export PATH="${PATH}:${ANDROID_HOME}/tools"
-
-# Install/update the required Android SDK components.
-echo yes | android update sdk -a --filter "platform-tools,build-tools-20.0.0,android-20" --no-ui --force > /dev/null
