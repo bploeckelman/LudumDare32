@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
+import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.narrative.NarrativeManager;
 import lando.systems.ld32.narrative.NarrativePhrase;
+import lando.systems.ld32.screens.FightScreen;
 
 public class StoryManager {
 
@@ -13,6 +15,8 @@ public class StoryManager {
         INTRO,
         LIBRARY_TUTORIAL
     }
+
+    public GameInstance game;
 
     private NarrativeManager narrativeManager;
     private Stage stage;
@@ -58,8 +62,9 @@ public class StoryManager {
 
                     // Tell the story
                     case 0:
+                        game.changeScreen(Constants.game_screen);
                         narrativeManager.addParagraph(new NarrativePhrase(Assets.font16,
-                                "You walk into a library"
+                                                                          "You walk into a library"
                         ));
                         stepPhrase = narrativeManager.addPhraseToCurrentParagraph(new NarrativePhrase("...  ", 3));
 //                        stepPhrase = narrativeManager.addParagraph(new NarrativePhrase(
@@ -90,7 +95,11 @@ public class StoryManager {
                 break;
 
             case LIBRARY_TUTORIAL:
-
+                FightScreen.currentLevel = 0;
+                FightScreen.enableAttackWords = true;
+                FightScreen.enableKillPhrase = true;
+                FightScreen.enableSpellWords = true;
+                game.changeScreen(Constants.fight_screen);
                 break;
 
         }

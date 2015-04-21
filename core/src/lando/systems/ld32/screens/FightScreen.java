@@ -51,6 +51,8 @@ public class FightScreen extends ScreenAdapter {
     private static final float seasick_max_angle =  10f;
     private static final float num_levels = 7;
 
+    public static int currentLevel = 0;
+
     Color              backgroundColor;
     FrameBuffer        sceneFBO;
     TextureRegion      sceneRegion;
@@ -62,7 +64,6 @@ public class FightScreen extends ScreenAdapter {
     TextureRegion     backgroundRegion;
     Array<AttackWord> attackWords;
     KillPhrase        killPhrase;
-    int currentLevel = 0;
 
     Player      player;
     Array<Puff> puffs;
@@ -83,9 +84,9 @@ public class FightScreen extends ScreenAdapter {
     float accum = 0f;
     float timerStateTime = 0f;
 
-    public boolean enableAttackWords = false;
-    public boolean enableSpellWords = false;
-    public boolean enableKillPhrase = false;
+    public static boolean enableAttackWords = false;
+    public static boolean enableSpellWords = false;
+    public static boolean enableKillPhrase = false;
 
 
     public FightScreen(GameInstance game) {

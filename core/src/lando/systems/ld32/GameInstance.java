@@ -6,6 +6,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -33,6 +34,8 @@ public class GameInstance extends Game {
 
         Assets.load();
 
+        storyManager.game = this;
+
         Tween.setCombinedAttributesLimit(4);
         Tween.setWaypointsLimit(2);
         Tween.registerAccessor(Color.class, new ColorAccessor());
@@ -43,13 +46,15 @@ public class GameInstance extends Game {
         screens.put(Constants.game_screen, new GameScreen(this));
         screens.put(Constants.fight_screen, new FightScreen(this));
         screens.put(Constants.game_over_screen, new GameOverScreen(this));
-        setScreen(screens.get(Constants.game_screen));
+//        setScreen(screens.get(Constants.game_screen));
 //        setScreen(screens.get(Constants.fight_screen));
 //        setScreen(screens.get(Constants.game_over_screen));
     }
 
     @Override
     public void render() {
+        Gdx.gl20.glClearColor(0, 0, 0, 1);
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         GameInstance.tweens.update(Gdx.graphics.getDeltaTime());
 
@@ -62,6 +67,13 @@ public class GameInstance extends Game {
 
     public void exit() {
         Gdx.app.exit();
+    }
+
+    public void changeScreen(String screenName) {
+        Screen screen = screens.get(screenName);
+        if (screen != null) {
+            setScreen(screen);
+        }
     }
 
 }
