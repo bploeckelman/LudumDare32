@@ -2,6 +2,8 @@ package lando.systems.ld32;
 
 public class Statistics {
 
+    private static int[] statNums;
+
     public static int numLettersTyped     = 0;
     public static int numAttackWordsFired = 0;
     public static int numWordsDefended    = 0;
@@ -23,4 +25,33 @@ public class Statistics {
     public static final String numFearsUncoveredStr   = "Fears Uncovered:";
     public static final String numStaggersStr         = "Staggers:";
 
+    public static String[] getStatStrings() {
+        return new String[]{
+            numLettersTypedStr
+            ,numAttackWordsFiredStr
+            ,numWordsDefendedStr
+            ,numWordsHitStr
+            ,numSpellsCastStr
+            ,numSpellsCounteredStr
+            ,numFearsUncoveredStr
+            ,numStaggersStr
+        };
+    }
+
+    public static int[] getStatNums() {
+        if(statNums == null) {
+            statNums = new int[]{
+                numLettersTyped
+                , numAttackWordsFired
+                , numWordsDefended
+                , numWordsHit
+                , numSpellsCast
+                , numSpellsCountered
+                , numFearsUncovered
+                , numStaggers
+            };
+        }
+
+        return statNums;
+    }
 }

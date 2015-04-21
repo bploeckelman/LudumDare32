@@ -18,18 +18,25 @@ public class GameOverScreen extends ScreenAdapter {
 
     OrthographicCamera camera;
 
-
+    float yOffset = 38;
+    float waitBetween = 1f;
+    float waitTimer;
+    String[] statStrings;
+    int[] statNums;
 
     public GameOverScreen(GameInstance game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.win_width, Constants.win_height);
         camera.update();
+
+        statStrings = Statistics.getStatStrings();
+        waitTimer = 0f;
     }
 
     @Override
     public void render(float delta) {
-        float yOffset = 38;
+        statNums = Statistics.getStatNums();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
         Gdx.gl20.glClearColor(0, 0, 0, 1);
@@ -42,16 +49,17 @@ public class GameOverScreen extends ScreenAdapter {
         batch.draw(Assets.background1, 0, 0, camera.viewportWidth, camera.viewportHeight);
         int i = 0;
         Assets.font32.draw(batch, "GAME OVER",38, Constants.win_height - yOffset*++i);
+        waitTimer += delta;
         ++i;
-        Assets.font32.draw(batch, Statistics.numLettersTypedStr + " " + Statistics.numLettersTyped, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numAttackWordsFiredStr + " " + Statistics.numAttackWordsFired, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numWordsDefendedStr + " " + Statistics.numWordsDefended, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numWordsHitStr + " " + Statistics.numWordsHit, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numSpellsCastStr + " " + Statistics.numSpellsCast, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numSpellsCounteredStr + " " + Statistics.numSpellsCountered, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numFearsUncoveredStr + " " + Statistics.numFearsUncovered, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.numStaggersStr + " " + Statistics.numStaggers, 38, Constants.win_height - yOffset*++i);
-        Assets.font32.draw(batch, Statistics.playTimeStr + " " + MathUtils.round(Statistics.playTime/60) + " Min", 38, Constants.win_height - yOffset*++i);
+        for(;i-2<statStrings.length; i++) {
+            if(waitTimer >= waitBetween*i-1) {
+                if(i-2 == statStrings.length-1) {
+                    Assets.font32.draw(batch, Statistics.playTimeStr + " " + MathUtils.round(Statistics.playTime/60) + " Min", 38, Constants.win_height - yOffset*++i);
+                } else {
+                    Assets.font32.draw(batch, statStrings[i - 2] + " " + statNums[i - 2], 38, Constants.win_height - yOffset * i);
+                }
+            }
+        }
         batch.end();
     }
 
