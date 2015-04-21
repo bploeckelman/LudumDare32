@@ -40,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.win_width, Constants.win_height);
         camera.update();
-        overworld_offset_x = camera.viewportWidth / 2f - Assets.overworld.getWidth() / 2f;
+        overworld_offset_x = camera.viewportWidth / 2f - Assets.overworld.getWidth() / 2f - 24f;
     }
 
     @Override
