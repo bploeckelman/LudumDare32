@@ -111,6 +111,7 @@ public class StoryManager {
                         FightScreen.enableSpellWords = true;
                         FightScreen.fightComplete = false;
                         game.changeScreen(Constants.fight_screen);
+                        nextStep();
                         break;
                     case 1:
                         WAIT_FOR_FIGHT_COMPLETE();

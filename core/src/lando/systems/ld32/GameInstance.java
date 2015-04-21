@@ -60,6 +60,10 @@ public class GameInstance extends Game {
 
         super.render();
 
+        if (getScreen() == screens.get(Constants.game_over_screen)) {
+            return;
+        }
+
         Assets.batch.begin();
         storyManager.render(Assets.batch);
         Assets.batch.end();
