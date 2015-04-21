@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import lando.systems.ld32.Assets;
 import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.HSL;
 
@@ -61,6 +62,12 @@ public class NarrativePhrase {
     }
     public NarrativePhrase(BitmapFont font, String text) {
         this(font, text, NarrativeManager.CPS, Effect.NONE);
+    }
+    public NarrativePhrase(String text) {
+        this(Assets.font16, text, NarrativeManager.CPS, Effect.NONE);
+    }
+    public NarrativePhrase(String text, float cps) {
+        this(Assets.font16, text, cps, Effect.NONE);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

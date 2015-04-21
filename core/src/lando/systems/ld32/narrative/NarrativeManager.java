@@ -18,16 +18,18 @@ public class NarrativeManager {
     private final static int PADDING = 10;
     private final static int PARAGRAPH_PAD_Y = 10;
     private final static float BACKGROUND_ALPHA = 0.8f;
-    public final static float CPS = 34f;
+    public final static float CPS = 64f;
 
     private final float x;
-    private final float y;
+    private float y;
     private final float width;
     private float height;
     private float updateTime = 0;
 
     private MutableFloat tweenHeight = new MutableFloat(0);
-    public boolean heightTweenInProgress = false;
+    private MutableFloat tweenY = new MutableFloat(0);
+    private boolean heightTweenInProgress = false;
+    private boolean yTweenInProgress = false;
 
     private ArrayList<NarrativeParagraph> paragraphs = new ArrayList<NarrativeParagraph>();
 
@@ -78,19 +80,23 @@ public class NarrativeManager {
     }
 
     public void render(SpriteBatch batch) {
-        batch.setColor(1, 1, 1, BACKGROUND_ALPHA);
+
         float thisHeight = heightTweenInProgress ? tweenHeight.floatValue() : height;
-        batch.draw(Assets.black, x, y, width, thisHeight);
+        float thisY = yTweenInProgress ? tweenY.floatValue() : y;
+
+        batch.setColor(1, 1, 1, BACKGROUND_ALPHA);
+        batch.draw(Assets.black, x, thisY, width, thisHeight);
         batch.setColor(1,1,1,1);
+
         Rectangle paragraphBounds = null;
         NarrativeParagraph paragraph;
         float currentX = x + PADDING;
-        float currentY = y + PADDING;
+        float currentY = thisY + PADDING;
         for (int i = paragraphs.size() - 1; i >= paragraphUpdateStartingIndex; i--) {
             paragraph = paragraphs.get(i);
             paragraphBounds = paragraph.render(batch, currentX, currentY);
             currentY += paragraphBounds.height + PARAGRAPH_PAD_Y;
-            if ((i - 1) > paragraphUpdateStartingIndex && currentY > y + height) {
+            if ((i - 1) > paragraphUpdateStartingIndex && currentY > thisY + thisHeight) {
                 paragraphUpdateStartingIndex = Math.max(i - 1, 0);
 //                Gdx.app.log("NarrativeManager.render", "updated starting index to " + paragraphUpdateStartingIndex);
                 break;
@@ -123,8 +129,24 @@ public class NarrativeManager {
                         }).start(GameInstance.tweens);
     }
 
+    public void setY(float y, float duration) {
+        yTweenInProgress = true;
+        tweenY.setValue(this.y);
+        Tween.to(tweenY, -1, duration)
+                .target(y)
+                .ease(Cubic.INOUT)
+                .setCallback(
+                        new TweenCallback() {
+                            @Override
+                            public void onEvent(int type, BaseTween<?> source) {
+                                yTweenInProgress = false;
+                                NarrativeManager.this.y = tweenY.floatValue();
+                            }
+                        }).start(GameInstance.tweens);
+    }
+
     public boolean isTweenInProgress() {
-        return heightTweenInProgress;
+        return heightTweenInProgress || yTweenInProgress;
     }
 
 }

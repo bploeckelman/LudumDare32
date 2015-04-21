@@ -26,7 +26,7 @@ public class StoryManager {
 
     public StoryManager() {
 
-        this.narrativeManager = new NarrativeManager(0, 0, Constants.win_width, Constants.win_height/3);
+        this.narrativeManager = new NarrativeManager(0, 0, Constants.win_width, Constants.win_height);
         goToStage(Stage.INTRO);
 
     }
@@ -56,20 +56,29 @@ public class StoryManager {
 
                 switch (step) {
 
+                    // Tell the story
                     case 0:
-                        stepPhrase = narrativeManager.addParagraph(new NarrativePhrase(Assets.font16,
-                                "A dude walks into a library.  Stuff happens."
+                        narrativeManager.addParagraph(new NarrativePhrase(Assets.font16,
+                                "You walk into a library"
                         ));
+                        stepPhrase = narrativeManager.addPhraseToCurrentParagraph(new NarrativePhrase("...  ", 3));
+//                        stepPhrase = narrativeManager.addParagraph(new NarrativePhrase(
+//                                "woeinfwoienf"
+//                        ));
                         nextStep();
                         break;
-
                     case 1:
                         WAIT_FOR_STEP_PHRASE_COMPLETE();
                         break;
 
+                    // Move the narrative to fight screen position
                     case 2:
-                        narrativeManager.setHeight(Constants.win_height, 2f);
+                        narrativeManager.setHeight(Constants.NARRATIVE_MANAGER_FIGHT_HEIGHT, 2f);
+                        narrativeManager.setY(Constants.NARRATIVE_MANAGER_FIGHT_Y, 2f);
                         nextStep();
+                        break;
+                    case 3:
+                        WAIT_FOR_NARRATIVE_TWEEN_COMPLETE();
                         break;
 
                     default:
@@ -90,10 +99,15 @@ public class StoryManager {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    public void WAIT(float duration) {
+        if (stepTimer >= duration) { nextStep(); }
+    }
     public void WAIT_FOR_STEP_PHRASE_COMPLETE() {
         if (stepPhrase.isComplete()) { nextStep(); }
     }
-
+    public void WAIT_FOR_NARRATIVE_TWEEN_COMPLETE() {
+        if (!narrativeManager.isTweenInProgress()) { nextStep(); }
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
