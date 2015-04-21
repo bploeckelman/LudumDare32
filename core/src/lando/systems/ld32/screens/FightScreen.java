@@ -87,6 +87,7 @@ public class FightScreen extends ScreenAdapter {
     public static boolean enableAttackWords = false;
     public static boolean enableSpellWords = false;
     public static boolean enableKillPhrase = false;
+    public static boolean fightComplete = false;
 
 
     public FightScreen(GameInstance game) {
@@ -109,6 +110,15 @@ public class FightScreen extends ScreenAdapter {
         backgroundRegion = enemy.backgroundRegion;
         attackWords = new Array<AttackWord>();
         killPhrase = new KillPhrase(enemy.killPhrase);
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
         player = new Player();
 
         keyboardInputAdapter = new KeyboardInputAdapter(attackWords, killPhrase);
@@ -139,6 +149,7 @@ public class FightScreen extends ScreenAdapter {
             if (accum > post_timeout) {
                 accum = 0f;
                 doPost = false;
+                fightComplete = true;
             }
         }
         if (doNoise) {
@@ -319,9 +330,11 @@ public class FightScreen extends ScreenAdapter {
             counterSpell.alive = false;
             Statistics.numFearsUncovered++;
 
+            // TODO: do this elsewhere
             enemy = EnemyFactory.getBoss(currentLevel);
             backgroundRegion = enemy.backgroundRegion;
             killPhrase = new KillPhrase(enemy.killPhrase);
+            keyboardInputAdapter.killPhrase = killPhrase;
 
             if (spellWord != null) {
                 spellWord.removeSpell(this);
@@ -463,6 +476,22 @@ public class FightScreen extends ScreenAdapter {
             .target(r, g, b)
             .ease(Quint.INOUT)
             .start(GameInstance.tweens);
+    }
+
+    public static void nextLevel() {
+//            enemy = EnemyFactory.getBoss(currentLevel + 1);
+//            backgroundRegion = enemy.backgroundRegion;
+//            killPhrase = new KillPhrase(enemy.killPhrase);
+//            keyboardInputAdapter.killPhrase = killPhrase;
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
     }
 
 }

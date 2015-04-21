@@ -13,7 +13,14 @@ public class StoryManager {
 
     private enum Stage {
         INTRO,
-        LIBRARY_TUTORIAL
+        LIBRARY_TUTORIAL,
+        FOREST,
+        CAVE,
+        DESERT,
+        WATER,
+        DUNGEON,
+        TOWER,
+        GAMEOVER
     }
 
     public GameInstance game;
@@ -30,7 +37,7 @@ public class StoryManager {
 
     public StoryManager() {
 
-        this.narrativeManager = new NarrativeManager(0, 0, Constants.win_width, Constants.win_height);
+        this.narrativeManager = new NarrativeManager(0, 0, Constants.win_width, Constants.NARRATIVE_MANAGER_FIGHT_HEIGHT + 20);// Constants.win_height);
         goToStage(Stage.INTRO);
 
     }
@@ -49,7 +56,7 @@ public class StoryManager {
     }
 
     private void nextStep() {
-        step++;
+        ++step;
     }
 
     private void tellStory() {
@@ -63,10 +70,14 @@ public class StoryManager {
                     // Tell the story
                     case 0:
                         game.changeScreen(Constants.game_screen);
-                        narrativeManager.addParagraph(new NarrativePhrase(Assets.font16,
-                                                                          "You walk into a library"
+                        narrativeManager.addParagraph(new NarrativePhrase(
+                                Assets.font16,
+//                                "You walk into a library"
+                                "You're an illiterate mud person who wants to write! "// are an illiterate mud person who wants to learn to write"
                         ));
-                        stepPhrase = narrativeManager.addPhraseToCurrentParagraph(new NarrativePhrase("...  ", 3));
+                        String text = "Spell effects: hold SHIFT and type the spell BACKWARDS to counter..."
+                                    + "Type words to reveal the enemy's fear, once revealed, type the fear word to defeat the enemy";
+                        stepPhrase = narrativeManager.addPhraseToCurrentParagraph(new NarrativePhrase(text, 40));
 //                        stepPhrase = narrativeManager.addParagraph(new NarrativePhrase(
 //                                "woeinfwoienf"
 //                        ));
@@ -75,17 +86,15 @@ public class StoryManager {
                     case 1:
                         WAIT_FOR_STEP_PHRASE_COMPLETE();
                         break;
-
-                    // Move the narrative to fight screen position
                     case 2:
+                        WAIT_FOR_NARRATIVE_TWEEN_COMPLETE();
+                        break;
+                    // Move the narrative to fight screen position
+                    case 3:
                         narrativeManager.setHeight(Constants.NARRATIVE_MANAGER_FIGHT_HEIGHT, 2f);
                         narrativeManager.setY(Constants.NARRATIVE_MANAGER_FIGHT_Y, 2f);
                         nextStep();
                         break;
-                    case 3:
-                        WAIT_FOR_NARRATIVE_TWEEN_COMPLETE();
-                        break;
-
                     default:
                         nextStep();
                         if (step > 2) { goToStage(Stage.LIBRARY_TUTORIAL); }
@@ -95,13 +104,214 @@ public class StoryManager {
                 break;
 
             case LIBRARY_TUTORIAL:
-                FightScreen.currentLevel = 0;
-                FightScreen.enableAttackWords = true;
-                FightScreen.enableKillPhrase = true;
-                FightScreen.enableSpellWords = true;
-                game.changeScreen(Constants.fight_screen);
+                switch (step) {
+                    case 0:
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+//                        nextStep();
+//                        if (step > 1) {
+//                            FightScreen.enableAttackWords = false;
+//                            FightScreen.enableKillPhrase = false;
+//                            FightScreen.enableSpellWords = false;
+//                            FightScreen.fightComplete = false;
+//                            goToStage(Stage.FOREST);
+//                        }
+//                        break;
+                }
                 break;
 
+            /*
+            case FOREST:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at forest level, expository things, then transition to fight screen lvl 1
+                        FightScreen.currentLevel = 1;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        nextStep();
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.CAVE);
+                        }
+                        break;
+                }
+                break;
+
+            case CAVE:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at cave level, expository things, then transition to fight screen lvl 2
+                        FightScreen.currentLevel = 2;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    case 2:
+                        FightScreen.enableAttackWords = false;
+                        FightScreen.enableKillPhrase = false;
+                        FightScreen.enableSpellWords = false;
+                        FightScreen.fightComplete = false;
+                        goToStage(Stage.WATER);
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.WATER);
+                        }
+                        break;
+                }
+                break;
+
+            case WATER:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at water level, expository things, then transition to fight screen lvl
+                        FightScreen.currentLevel = 3;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.DESERT);
+                        }
+                        break;
+                }
+                break;
+
+            case DESERT:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at desert level, expository things, then transition to fight screen lvl
+                        FightScreen.currentLevel = 4;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.DUNGEON);
+                        }
+                        break;
+                }
+                break;
+
+            case DUNGEON:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at dungeon level, expository things, then transition to fight screen lvl
+                        FightScreen.currentLevel = 5;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.TOWER);
+                        }
+                        break;
+                }
+                break;
+
+            case TOWER:
+                switch (step) {
+                    case 0:
+                        // TODO: go to overworld at tower level, expository things, then transition to fight screen lvl
+                        FightScreen.currentLevel = 6;
+                        FightScreen.enableAttackWords = true;
+                        FightScreen.enableKillPhrase = true;
+                        FightScreen.enableSpellWords = true;
+                        FightScreen.fightComplete = false;
+                        game.changeScreen(Constants.fight_screen);
+                        nextStep();
+                        break;
+                    case 1:
+                        WAIT_FOR_FIGHT_COMPLETE();
+                        break;
+                    default:
+                        nextStep();
+                        if (step > 1) {
+                            FightScreen.enableAttackWords = false;
+                            FightScreen.enableKillPhrase = false;
+                            FightScreen.enableSpellWords = false;
+                            FightScreen.fightComplete = false;
+                            goToStage(Stage.GAMEOVER);
+                        }
+                        break;
+                }
+                break;
+
+            case GAMEOVER:
+                switch (step) {
+                    case 0:
+                        game.changeScreen(Constants.game_over_screen);
+                        break;
+                    case 1:
+                        WAIT(100000f);
+                        break;
+                }
+                break;
+
+*/
         }
 
     }
@@ -116,6 +326,11 @@ public class StoryManager {
     }
     public void WAIT_FOR_NARRATIVE_TWEEN_COMPLETE() {
         if (!narrativeManager.isTweenInProgress()) { nextStep(); }
+    }
+    public void WAIT_FOR_FIGHT_COMPLETE() {
+        if (FightScreen.fightComplete) {
+            nextStep();
+        } else Gdx.app.log("WAIT", "not done");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

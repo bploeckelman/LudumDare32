@@ -41,6 +41,8 @@ public class GameScreen extends ScreenAdapter {
         camera.setToOrtho(false, Constants.win_width, Constants.win_height);
         camera.update();
         overworld_offset_x = camera.viewportWidth / 2f - Assets.overworld.getWidth() / 2f - 24f;
+        yPos.setValue(tower_position);
+        scrollCamera(library_position, 10f);
     }
 
     @Override
