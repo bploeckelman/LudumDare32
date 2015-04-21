@@ -8,8 +8,8 @@ export TERM="dumb"
 
 export ANDROID_HOME="$(pwd)/travis/android-sdk-linux"
 
-# If the Android SDK is not installed then download and install it.
-if [ ! -d "${ANDROID_HOME}" ]; then
+# Check if ANDROID_HOME contains android tools.
+if [ ! -x "${ANDROID_HOME}/tools/android" ]; then
 
 	# Set the version of the Android SDK to install.
 	android_sdk_version="24.0.1"

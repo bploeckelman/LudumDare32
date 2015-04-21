@@ -6,7 +6,7 @@ set -xv
 # Assume that we are using a dumb terminal (produces cleaner output on build servers).
 export TERM="dumb"
 
-# If ANDROID_HOME is not set then assume it is /opt.
+# If ANDROID_HOME is not set then assume it is in ./travis.
 if [ -z "${ANDROID_HOME}" ]; then
 	export ANDROID_HOME="$(pwd)/travis/android-sdk-linux"
 fi
@@ -20,5 +20,4 @@ fi
 # Add the Android SDK tools to the PATH.
 export PATH="${PATH}:${ANDROID_HOME}/tools"
 
-./gradlew desktop:dist
-./gradlew html:dist
+./gradlew desktop:dist html:dist
