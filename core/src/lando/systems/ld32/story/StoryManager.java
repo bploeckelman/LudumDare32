@@ -331,7 +331,7 @@ public class StoryManager {
     public void WAIT_FOR_FIGHT_COMPLETE() {
         if (FightScreen.fightComplete) {
             nextStep();
-        } else Gdx.app.log("WAIT", "not done");
+        } //else Gdx.app.log("WAIT", "not done");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

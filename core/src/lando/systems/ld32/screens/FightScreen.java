@@ -110,15 +110,15 @@ public class FightScreen extends ScreenAdapter {
         backgroundRegion = enemy.backgroundRegion;
         attackWords = new Array<AttackWord>();
         killPhrase = new KillPhrase(enemy.killPhrase);
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
-        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
+//        killPhrase.enableLetter();
         player = new Player();
 
         keyboardInputAdapter = new KeyboardInputAdapter(attackWords, killPhrase);
@@ -335,17 +335,17 @@ public class FightScreen extends ScreenAdapter {
             backgroundRegion = enemy.backgroundRegion;
             killPhrase = new KillPhrase(enemy.killPhrase);
             keyboardInputAdapter.killPhrase = killPhrase;
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
-            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
+//            killPhrase.enableLetter();
 
             if (spellWord != null) {
                 spellWord.removeSpell(this);
