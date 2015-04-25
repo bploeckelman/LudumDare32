@@ -419,10 +419,10 @@ public class FightScreen extends ScreenAdapter {
 
             if (doNoise) {
                 batch.setColor(1, 1, 1, 0.5f);
-                batch.draw(Assets.noiseRegionY, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
+                batch.draw(Assets.noiseRegionY, bgx, bgy, width, height);
                 batch.setColor(1, 1, 1, 1);
-                batch.draw(Assets.noiseRegionX, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
-                batch.draw(Assets.noiseRegionXY, -64, -64, sceneCamera.viewportWidth + 128, sceneCamera.viewportHeight + 128);
+                batch.draw(Assets.noiseRegionX, bgx, bgy, width, height);
+                batch.draw(Assets.noiseRegionXY,bgx, bgy, width, height);
                 batch.setColor(backgroundColor);
             }
 
