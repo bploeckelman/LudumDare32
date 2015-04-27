@@ -72,6 +72,13 @@ public class EnemyFactory {
                         "SHUSH",
                         "READ",
                         "LEARN",
+                        "STUDY",
+                        "RESEARCH",
+                        "PERUSE",
+                        "KNOW",
+                        "DISCOVER",
+                        "SKIM",
+                        "REVIEW"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.SHHH
@@ -80,6 +87,10 @@ public class EnemyFactory {
         killPhrases.put("Librarian", new String[]{
                 "DOG EAR PAGE",
                 "THE INTERNET",
+                "IGNORANCE",
+                "ILLITERACY",
+                "INDIFFERENCE",
+                "PUBLISHERS"
         });
 
         //---------------------------------------
@@ -93,7 +104,17 @@ public class EnemyFactory {
                         "ROAR",
                         "SCRATCH",
                         "GROWL",
-                        "GRUNT"
+                        "GRUNT",
+                        "BELLOW",
+                        "BARK",
+                        "GRUMBLE",
+                        "BRUISE",
+                        "SQUEEZE",
+                        "SMUSH",
+                        "TRAMPLE",
+                        "QUASH",
+                        "CRASH",
+                        "GRUMBLE"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET
@@ -102,7 +123,11 @@ public class EnemyFactory {
         killPhrases.put("Ogre", new String[]{
                 "BACON PANCAKES",
                 "NO UNDERWEAR",
-                "MATTED FUR"
+                "MATTED FUR",
+                "A HOT SHOWER",
+                "CIVILIZATION",
+                "PAVED PARKS",
+                "EDUCATION"
         });
 
         //---------------------------------------
@@ -115,7 +140,19 @@ public class EnemyFactory {
                         "FLUTTER",
                         "SWOOP",
                         "SCRATCH",
-                        "BLEED"
+                        "BLEED",
+                        "HANG",
+                        "SWING",
+                        "THRASH",
+                        "FLIT AROUND",
+                        "HOVER",
+                        "CLAW",
+                        "GRAZE",
+                        "LACERATE",
+                        "LEECH",
+                        "CHEW",
+                        "CHOMP",
+                        "NIBBLE"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
@@ -125,7 +162,10 @@ public class EnemyFactory {
         killPhrases.put("Bat", new String[]{
                 "FANG CAVITIES",
                 "BADLY TORN WINGS",
-                "LOSS OF HEARING"
+                "LOSS OF HEARING",
+                "BRIGHT SUNLIGHT",
+                "SUDDEN VAMPIRISM",
+                "CAVE EXPLORERS"
         });
 
         //---------------------------------------
@@ -138,7 +178,17 @@ public class EnemyFactory {
                         "SKITTER",
                         "POISON",
                         "CREEP",
-                        "CRAWL"
+                        "CRAWL",
+                        "SCAMPER",
+                        "JAB",
+                        "WOUND",
+                        "HURT",
+                        "SLINK",
+                        "SNEAK",
+                        "WRIGGLE",
+                        "PROD",
+                        "STICK",
+                        "POKE"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
@@ -149,7 +199,10 @@ public class EnemyFactory {
         killPhrases.put("Scorpion", new String[]{
                 "POISON LOSS",
                 "BITTER COLD",
-                "GIANT SCARY BOOTS"
+                "GIANT BOOTS",
+                "WICKED OWLS",
+                "HUNGRY CAVE BATS",
+                "OTHER SCORPIONS"
         });
 
         //---------------------------------------
@@ -162,7 +215,19 @@ public class EnemyFactory {
                         "DROWN",
                         "DAMPEN",
                         "SUFFOCATE",
-                        "MOISTEN"
+                        "MOISTEN",
+                        "DRENCH",
+                        "RINSE",
+                        "SOAK",
+                        "DOUSE",
+                        "SLOSH",
+                        "SPATTER",
+                        "SPRAY",
+                        "HUMIDIFY",
+                        "RINSE",
+                        "FLOOD",
+                        "IMMERSE",
+                        "ASPHYXIATE"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
@@ -174,7 +239,13 @@ public class EnemyFactory {
         killPhrases.put("WaterCube", new String[]{
                 "EVAPORATION",
                 "GETTING DRUNK",
-                "SUBLIMATION"
+                "SUBLIMATION",
+                "DEHYDRATION",
+                "FREEZING COLD",
+                "VAPORIZATION",
+                "BOILING HEAT",
+                "DISSIPATION",
+                "ENDLESS DROUGHT"
         });
 
         //---------------------------------------
@@ -187,7 +258,22 @@ public class EnemyFactory {
                         "STARE DOWN",
                         "WAGGLE",
                         "FLOAT",
-                        "GLARE"
+                        "GLARE",
+                        "WATCH",
+                        "EVIL EYE",
+                        "EXAMINE",
+                        "OBSERVE",
+                        "SCRUTINIZE",
+                        "GLIMPSE",
+                        "PEEK",
+                        "HOSTILE STARE",
+                        "SUFFER",
+                        "SCOURGE",
+                        "PLAGUE",
+                        "TORMENT",
+                        "AFFLICT",
+                        "GLOWER",
+                        "SCOWL"
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
@@ -200,7 +286,11 @@ public class EnemyFactory {
         killPhrases.put("Beholder", new String[]{
                 "ASTIGMATISM",
                 "CATARACTS",
-                "MONOCLES"
+                "MONOCLES",
+                "DEPTH PERCEPTION",
+                "COLOR BLINDNESS",
+                "GLAUCOMA",
+                "SHARP OBJECTS"
         });
 
         //---------------------------------------
@@ -213,7 +303,19 @@ public class EnemyFactory {
                         "STRUT",
                         "PREEN",
                         "CLUCK",
-                        "FEATHER"
+                        "FEATHER",
+                        "SWAGGER",
+                        "PUFF UP",
+                        "SPREAD WINGS",
+                        "HEAD BOB",
+                        "LAY EGG",
+                        "SCRATCH",
+                        "FEED",
+                        "BIRD FIGHT",
+                        "BROODING",
+                        "FLOCK",
+                        "WARNING CALL",
+
                 },
                 new SpellWord.Type[]{
                         SpellWord.Type.QUIET,
@@ -227,7 +329,11 @@ public class EnemyFactory {
         killPhrases.put("Chicken", new String[]{
                 "CHOPPING BLOCK",
                 "LOSING FEATHERS",
-                "RUFFLED FEATHERS"
+                "RUFFLED FEATHERS",
+                "FACTORY FARMS",
+                "POULTRY FARMING",
+                "NASTY PARASITES",
+                "AVIAN INFLUENZA"
         });
 
         for (String name : bosses.keySet()) {
