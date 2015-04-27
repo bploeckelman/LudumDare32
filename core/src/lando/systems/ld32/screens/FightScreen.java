@@ -3,8 +3,8 @@ package lando.systems.ld32.screens;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.equations.Linear;
-import aurelienribon.tweenengine.equations.Quint;
+import aurelienribon.tweenengine.equations.*;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -43,7 +43,7 @@ public class FightScreen extends ScreenAdapter {
 
     // TODO: set relative to kill phrase length or enemy strength?
     private static final float stagger_time = 4f;
-    private static final float post_timeout = 6f;
+    private static final float post_timeout = 3f;
     private static final float noise_scroll_speed_x = 0.5f;
     private static final float noise_scroll_speed_y = 0.2f;
     private static final float seasick_rot_speed = 30f;
@@ -83,12 +83,16 @@ public class FightScreen extends ScreenAdapter {
     boolean doPost = false;
     float accum = 0f;
     float timerStateTime = 0f;
+    MutableFloat postAlphaTimer = new MutableFloat(0.f);
 
     public static boolean enableAttackWords = false;
     public static boolean enableSpellWords = false;
     public static boolean enableKillPhrase = false;
     public static boolean fightComplete = false;
 
+    final float transition_duration = 3f;
+    float transitionTimer = transition_duration;
+    public TextureRegion transitionRegion;
 
     public FightScreen(GameInstance game) {
         this.game = game;
@@ -141,12 +145,17 @@ public class FightScreen extends ScreenAdapter {
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
+        transitionTimer -= delta;
+        if (transitionTimer < 0f) {
+            transitionTimer = 0f;
+        }
+
         Statistics.playTime += delta;
         backgroundRegion = enemy.backgroundRegion;
 
         if (doPost) {
-            accum += delta * 2f;
-            if (accum > post_timeout) {
+            accum -= delta;
+            if (accum < 0f) {
                 accum = 0f;
                 doPost = false;
                 fightComplete = true;
@@ -331,6 +340,7 @@ public class FightScreen extends ScreenAdapter {
             Statistics.numFearsUncovered++;
 
             // TODO: do this elsewhere
+            transitionRegion = null;
             enemy = EnemyFactory.getBoss(currentLevel);
             backgroundRegion = enemy.backgroundRegion;
             killPhrase = new KillPhrase(enemy.killPhrase);
@@ -358,7 +368,13 @@ public class FightScreen extends ScreenAdapter {
             keyboardInputAdapter.killPhrase = killPhrase;
 
             doPost = true;
-            accum = 0f;
+            accum = post_timeout;
+            postAlphaTimer.setValue(0f);
+            Tween.to(postAlphaTimer, -1, post_timeout/2f)
+                 .target(post_timeout)
+                 .ease(Sine.INOUT)
+                 .repeatYoyo(1, 0)
+                 .start(GameInstance.tweens);
 
             Assets.enemyDefeated.play(.5f);
 
@@ -461,12 +477,18 @@ public class FightScreen extends ScreenAdapter {
         batch.begin();
         if (doPost) {
             Assets.postShader.setUniformf("u_time", accum);
+            Assets.postShader.setUniformf("u_timer", postAlphaTimer.floatValue() / post_timeout);
             Assets.postShader.setUniformf("u_resolution", screenCamera.viewportWidth, screenCamera.viewportHeight);
             Assets.postShader.setUniformf("u_screenPos",
                                           screenCamera.viewportWidth / 2f,
                                           screenCamera.viewportHeight / 2f);
         }
         batch.draw(sceneRegion, 0, 0);
+        if (transitionRegion != null) {
+            batch.setColor(1, 1, 1, transitionTimer / transition_duration);
+            batch.draw(transitionRegion, 0, 0, screenCamera.viewportWidth, screenCamera.viewportHeight);
+            batch.setColor(1, 1, 1, 1);
+        }
         batch.end();
     }
 

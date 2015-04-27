@@ -10,6 +10,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import lando.systems.ld32.Assets;
 import lando.systems.ld32.Constants;
 import lando.systems.ld32.GameInstance;
@@ -25,24 +28,53 @@ public class GameScreen extends ScreenAdapter {
     public static final float forest_position  = -300;
     public static final float library_position = 0;
 
-    GameInstance game;
+    GameInstance       game;
     OrthographicCamera camera;
 
     final float overworld_offset_x;
     final float speed = 240f;
 
     int currentLevel = 0;
+    FrameBuffer fbo;
+    OrthographicCamera fboCamera;
+    TextureRegion fboRegion;
 
     MutableFloat yPos = new MutableFloat(0f);
 
+    public boolean introTweenComplete = false;
+
     public GameScreen(GameInstance game) {
         this.game = game;
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Constants.win_width, Constants.win_height);
         camera.update();
+
+        fboCamera = new OrthographicCamera();
+        fboCamera.setToOrtho(false, Constants.win_width, Constants.win_height);
+        fboCamera.update();
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, (int) camera.viewportWidth, (int) camera.viewportHeight, false);
+        fboRegion = new TextureRegion(fbo.getColorBufferTexture());
+        fboRegion.flip(false, true);
+
         overworld_offset_x = camera.viewportWidth / 2f - Assets.overworld.getWidth() / 2f - 24f;
-        yPos.setValue(tower_position);
-        scrollCamera(library_position, 10f);
+        yPos.setValue(library_position);
+        scrollCamera(tower_position, 10f, new Utils.Callback() {
+            @Override
+            public void run() {
+                Tween.to(yPos, -1, 3)
+                     .target(library_position)
+                     .delay(1)
+                     .ease(Circ.OUT)
+                     .setCallback(new TweenCallback() {
+                         @Override
+                         public void onEvent(int type, BaseTween<?> source) {
+                             introTweenComplete = true;
+                         }
+                     })
+                     .start(GameInstance.tweens);
+            }
+        });
     }
 
     @Override
@@ -62,15 +94,30 @@ public class GameScreen extends ScreenAdapter {
 //            placeCamera(yPos.floatValue() + 1f);
         }
 
+        fbo.begin();
+        {
+            Gdx.gl20.glClearColor(0, 0, 0, 1);
+            Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            Assets.batch.setProjectionMatrix(camera.combined);
+            Assets.batch.setShader(null);
+            Assets.batch.begin();
+            Assets.batch.draw(Assets.overworld, overworld_offset_x, yPos.floatValue());
+            Assets.batch.end();
+        }
+        fbo.end();
+
         Gdx.gl20.glClearColor(0, 0, 0, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        Assets.batch.setProjectionMatrix(camera.combined);
+        Assets.batch.setProjectionMatrix(fboCamera.combined);
         Assets.batch.setShader(null);
         Assets.batch.begin();
-        Assets.batch.draw(Assets.overworld, overworld_offset_x, yPos.floatValue());
+        Assets.batch.draw(fboRegion, 0, 0, fboCamera.viewportWidth, fboCamera.viewportHeight);
         Assets.batch.end();
+
     }
+
+    public TextureRegion getColorBuffer() { return fboRegion; }
 
     public void placeCamera(float yPosition) {
         yPos.setValue(yPosition);

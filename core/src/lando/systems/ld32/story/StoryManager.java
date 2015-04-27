@@ -8,6 +8,7 @@ import lando.systems.ld32.GameInstance;
 import lando.systems.ld32.narrative.NarrativeManager;
 import lando.systems.ld32.narrative.NarrativePhrase;
 import lando.systems.ld32.screens.FightScreen;
+import lando.systems.ld32.screens.GameScreen;
 
 public class StoryManager {
 
@@ -87,7 +88,10 @@ public class StoryManager {
                         WAIT_FOR_STEP_PHRASE_COMPLETE();
                         break;
                     case 2:
-                        WAIT_FOR_NARRATIVE_TWEEN_COMPLETE();
+//                        WAIT_FOR_NARRATIVE_TWEEN_COMPLETE();
+                        if (((GameScreen) game.getScreen()).introTweenComplete) {
+                            nextStep();
+                        }
                         break;
                     // Move the narrative to fight screen position
                     case 3:
@@ -110,6 +114,9 @@ public class StoryManager {
                         FightScreen.enableKillPhrase = true;
                         FightScreen.enableSpellWords = true;
                         FightScreen.fightComplete = false;
+                        GameScreen gameScreen = (GameScreen) game.getScreen();
+                        FightScreen fightScreen = (FightScreen) GameInstance.screens.get(Constants.fight_screen);
+                        fightScreen.transitionRegion = gameScreen.getColorBuffer();
                         game.changeScreen(Constants.fight_screen);
                         nextStep();
                         break;
