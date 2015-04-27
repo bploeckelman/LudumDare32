@@ -48,7 +48,7 @@ public class GameOverScreen extends ScreenAdapter {
         batch.begin();
         batch.draw(Assets.background1, 0, 0, camera.viewportWidth, camera.viewportHeight);
         int i = 0;
-        Assets.font32.draw(batch, "GAME OVER",38, Constants.win_height - yOffset*++i);
+        Assets.font32.draw(batch, "THE END",38, Constants.win_height - yOffset*++i);
         waitTimer += delta;
         ++i;
         for(;i-2<statStrings.length; i++) {
