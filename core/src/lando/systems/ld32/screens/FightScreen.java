@@ -340,7 +340,6 @@ public class FightScreen extends ScreenAdapter {
             Statistics.numFearsUncovered++;
 
             // TODO: do this elsewhere
-            transitionRegion = null;
             enemy = EnemyFactory.getBoss(currentLevel);
             backgroundRegion = enemy.backgroundRegion;
             killPhrase = new KillPhrase(enemy.killPhrase);
@@ -367,18 +366,29 @@ public class FightScreen extends ScreenAdapter {
             keyboardInputAdapter.spellWord = null;
             keyboardInputAdapter.killPhrase = killPhrase;
 
-            doPost = true;
-            accum = post_timeout;
-            postAlphaTimer.setValue(0f);
-            Tween.to(postAlphaTimer, -1, post_timeout/2f)
-                 .target(post_timeout)
-                 .ease(Sine.INOUT)
-                 .repeatYoyo(1, 0)
-                 .start(GameInstance.tweens);
-
             Assets.enemyDefeated.play(.5f);
-
             tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
+
+            // Transition between overworld map and new level
+            final GameScreen mapScreen = (GameScreen) GameInstance.screens.get(Constants.game_screen);
+            mapScreen.changeLevel(currentLevel, new Callback() {
+                @Override
+                public void run() {
+                    game.changeScreen(Constants.fight_screen);
+                    transitionTimer = transition_duration;
+
+                    doPost = true;
+                    accum = post_timeout;
+
+                    postAlphaTimer.setValue(0f);
+                    Tween.to(postAlphaTimer, -1, post_timeout / 2f)
+                         .target(post_timeout)
+                         .ease(Sine.INOUT)
+                         .repeatYoyo(1, 0)
+                         .start(GameInstance.tweens);
+                }
+            });
+            game.changeScreen(Constants.game_screen);
         }
 
         if(stunStars.alive) {
@@ -461,6 +471,13 @@ public class FightScreen extends ScreenAdapter {
                 }
             }
 
+            // Render level transition effect
+            if (transitionRegion != null) {
+                batch.setColor(1, 1, 1, transitionTimer / transition_duration);
+                batch.draw(transitionRegion, 0, 0, screenCamera.viewportWidth, screenCamera.viewportHeight);
+                batch.setColor(1, 1, 1, 1);
+            }
+
             batch.end();
         }
         sceneFBO.end();
@@ -481,11 +498,6 @@ public class FightScreen extends ScreenAdapter {
             Assets.postShader.setUniformf("u_resolution", screenCamera.viewportWidth, screenCamera.viewportHeight);
         }
         batch.draw(sceneRegion, 0, 0);
-        if (transitionRegion != null) {
-            batch.setColor(1, 1, 1, transitionTimer / transition_duration);
-            batch.draw(transitionRegion, 0, 0, screenCamera.viewportWidth, screenCamera.viewportHeight);
-            batch.setColor(1, 1, 1, 1);
-        }
         batch.end();
     }
 

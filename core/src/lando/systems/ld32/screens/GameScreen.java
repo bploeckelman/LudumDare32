@@ -153,6 +153,10 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void changeLevel(int level) {
+        changeLevel(level, null);
+    }
+
+    public void changeLevel(int level, Utils.Callback callback) {
         currentLevel = level;
         float target = library_position;
         switch (currentLevel) {
@@ -164,7 +168,11 @@ public class GameScreen extends ScreenAdapter {
             case 5: target = dungeon_position; break;
             case 6: target = tower_position; break;
         }
-        scrollCamera(target, 1f);
+        if (callback == null) {
+            scrollCamera(target, 3f);
+        } else {
+            scrollCamera(target, 3f, callback);
+        }
     }
 
 }

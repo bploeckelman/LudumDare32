@@ -33,5 +33,5 @@ void main()
 	if(mod(ringr,2.)==1.)
 		color=1.-color;
 	LOWP vec4 texColor = texture2D(u_texture, v_texCoord0);
-	gl_FragColor = texColor + u_timer * vec4(color, color, color, color);
+	gl_FragColor = texColor + u_timer * vec4(color, color, color, color * texColor.a);
 }
