@@ -479,9 +479,6 @@ public class FightScreen extends ScreenAdapter {
             Assets.postShader.setUniformf("u_time", accum);
             Assets.postShader.setUniformf("u_timer", postAlphaTimer.floatValue() / post_timeout);
             Assets.postShader.setUniformf("u_resolution", screenCamera.viewportWidth, screenCamera.viewportHeight);
-            Assets.postShader.setUniformf("u_screenPos",
-                                          screenCamera.viewportWidth / 2f,
-                                          screenCamera.viewportHeight / 2f);
         }
         batch.draw(sceneRegion, 0, 0);
         if (transitionRegion != null) {
