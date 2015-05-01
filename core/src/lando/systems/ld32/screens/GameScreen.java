@@ -3,7 +3,7 @@ package lando.systems.ld32.screens;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.equations.Circ;
+import aurelienribon.tweenengine.equations.*;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -59,22 +59,27 @@ public class GameScreen extends ScreenAdapter {
 
         overworld_offset_x = camera.viewportWidth / 2f - Assets.overworld.getWidth() / 2f - 24f;
         yPos.setValue(library_position);
-        scrollCamera(tower_position, 10f, new Utils.Callback() {
-            @Override
-            public void run() {
-                Tween.to(yPos, -1, 3)
-                     .target(library_position)
-                     .delay(1)
-                     .ease(Circ.OUT)
-                     .setCallback(new TweenCallback() {
-                         @Override
-                         public void onEvent(int type, BaseTween<?> source) {
-                             introTweenComplete = true;
-                         }
-                     })
-                     .start(GameInstance.tweens);
-            }
-        });
+        Tween.to(yPos, -1, 10f)
+             .target(tower_position)
+             .delay(1)
+             .ease(Sine.INOUT)
+             .setCallback(new TweenCallback() {
+                 @Override
+                 public void onEvent(int type, BaseTween<?> source) {
+                     Tween.to(yPos, -1, 7)
+                          .target(library_position)
+                          .delay(2)
+                          .ease(Sine.INOUT)
+                          .setCallback(new TweenCallback() {
+                              @Override
+                              public void onEvent(int type, BaseTween<?> source) {
+                                  introTweenComplete = true;
+                              }
+                          })
+                          .start(GameInstance.tweens);
+                 }
+             })
+             .start(GameInstance.tweens);
     }
 
     @Override
@@ -83,16 +88,16 @@ public class GameScreen extends ScreenAdapter {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) game.exit();
 
-        if      (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            nextLevel();
+//        if      (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+//            nextLevel();
 //            scrollCamera(yPos.floatValue() - speed, 1f);
 //            placeCamera(yPos.floatValue() - 1f);
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            prevLevel();
+//        }
+//        else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+//            prevLevel();
 //            scrollCamera(yPos.floatValue() + speed, 1f);
 //            placeCamera(yPos.floatValue() + 1f);
-        }
+//        }
 
         fbo.begin();
         {
@@ -130,7 +135,8 @@ public class GameScreen extends ScreenAdapter {
     public void scrollCamera(float newYPosition, float duration, final Utils.Callback callback) {
         Tween.to(yPos, -1, duration)
              .target(newYPosition)
-             .ease(Circ.OUT)
+             .delay(0.5f)
+             .ease(Sine.INOUT)
              .setCallback(new TweenCallback() {
                  @Override
                  public void onEvent(int type, BaseTween<?> source) {
