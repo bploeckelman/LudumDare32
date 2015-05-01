@@ -1,5 +1,6 @@
 package lando.systems.ld32.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,6 +25,7 @@ public class Enemy extends Entity {
     public TextureRegion backgroundRegion;
     String[] attackDictionary;
     SpellWord.Type[] spellDictionary;
+    boolean didCastNewSpell = false;
     public String killPhrase;
     public boolean ventriloquist = false;
     Color oldColor;
@@ -67,7 +69,14 @@ public class Enemy extends Entity {
     public SpellWord generateSpell() {
         SpellWord spellWord = null;
         if (spellTimer > spellDelay) {
-            spellWord = SpellWord.create(spellDictionary[MathUtils.random(0, spellDictionary.length-1)].num);
+            int spellDictIndex;
+            if (!didCastNewSpell) {
+                didCastNewSpell = true;
+                spellDictIndex = spellDictionary.length - 1;
+            } else {
+                spellDictIndex = MathUtils.random(0, spellDictionary.length - 1);
+            }
+            spellWord = SpellWord.create(spellDictionary[spellDictIndex].num);
         }
         if (spellWord != null) {
             Statistics.numSpellsCast++;
