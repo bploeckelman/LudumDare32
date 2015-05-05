@@ -365,8 +365,9 @@ public class FightScreen extends ScreenAdapter {
 
             keyboardInputAdapter.spellWord = null;
             keyboardInputAdapter.killPhrase = killPhrase;
+            keyboardInputAdapter.staggerWindow = false;
 
-            Assets.enemyDefeated.play(.5f);
+            Assets.explosion.play(.5f);
             tweenBgColor(1f, 1f, 1f, KillPhrase.dropRate/2);
 
             // Transition between overworld map and new level
@@ -379,6 +380,8 @@ public class FightScreen extends ScreenAdapter {
 
                     doPost = true;
                     accum = post_timeout;
+
+                    Assets.enemyDefeated.play(.5f);
 
                     postAlphaTimer.setValue(0f);
                     Tween.to(postAlphaTimer, -1, post_timeout / 2f)
